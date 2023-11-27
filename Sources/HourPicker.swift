@@ -29,7 +29,7 @@ public struct HourPicker: View {
     private let titleKey: LocalizedStringKey
 
     @Binding private var selection: Int?
-    @State private var isShowingPickerBlah: Bool = false
+    @State private var isShowingPicker: Bool = false
     @State private var hours: Int
 
     public init(_ titleKey: LocalizedStringKey, selection: Binding<Int?>) {
@@ -50,7 +50,7 @@ public struct HourPicker: View {
                 .foregroundColor(.secondary)
 
             Button(action: {
-                isShowingPickerBlah.toggle()
+                isShowingPicker.toggle()
             }, label: {
                 let title = (hours == -1 ? "--" : String(format: "%02d", hours)) + " "
                 Text(title) + Text(Image(systemName: "chevron.up.chevron.down"))
@@ -58,7 +58,7 @@ public struct HourPicker: View {
             .buttonStyle(.plain)
             .foregroundColor(.accentColor)
         }
-        .sheet(isPresented: $isShowingPickerBlah) {
+        .sheet(isPresented: $isShowingPicker) {
             hourPickerView()
         }
         .onChange(of: hours) { newValue in
@@ -88,7 +88,7 @@ public struct HourPicker: View {
                 ForEach(0 ... 48, id: \.self) { hour in
                     Button(String(format: "%02d", hour)) {
                         hours = hour
-                        isShowingPickerBlah = false
+                        isShowingPicker = false
                     }
                     .buttonStyle(.plain)
                     .frame(width: 50, height: 50, alignment: .center)
@@ -105,7 +105,7 @@ public struct HourPicker: View {
     @ViewBuilder
     func cancelButton() -> some View {
         Button("Cancel") {
-            isShowingPickerBlah = false
+            isShowingPicker = false
         }
         .buttonStyle(.plain)
     }

@@ -61,8 +61,8 @@ public struct MonthYearDatePicker: View {
             }
 
             HStack(alignment: .center, spacing: 20) {
-                MonthPicker("Month", selection: $month)
                 YearPicker("Year", selection: $year)
+                MonthPicker("Month", selection: $month)
                 Spacer()
             }
         }

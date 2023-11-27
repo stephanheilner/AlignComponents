@@ -71,9 +71,9 @@ public struct MonthDayYearDatePicker: View {
             }
 
             HStack(alignment: .center, spacing: 20) {
+                YearPicker("Year", selection: $year)
                 MonthPicker("Month", selection: $month)
                 DayPicker("Day", selection: $day, month: month)
-                YearPicker("Year", selection: $year)
 
                 Spacer()
             }
