@@ -90,11 +90,7 @@ public struct MonthPicker: View {
                         self.month = month
                         isShowingPicker = false
                     }
-                    .buttonStyle(.plain)
-                    .frame(width: 100, height: 50, alignment: .center)
-                    .background(Color.secondary)
-                    .foregroundColor(Color(UIColor.systemBackground))
-                    .cornerRadius(6)
+                    .buttonStyle(PickerButtonStyle())
                 }
             }
         }

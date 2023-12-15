@@ -92,11 +92,7 @@ public struct DayPicker: View {
                         self.day = day
                         isShowingPicker = false
                     }
-                    .buttonStyle(.plain)
-                    .frame(width: 50, height: 50, alignment: .center)
-                    .background(Color.secondary)
-                    .foregroundColor(Color(UIColor.systemBackground))
-                    .cornerRadius(6)
+                    .buttonStyle(PickerButtonStyle())
                 }
             }
         }

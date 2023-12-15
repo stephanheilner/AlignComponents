@@ -83,6 +83,7 @@ public struct HourPicker: View {
                     Spacer()
                 }
             }
+//            LazyVGrid(columns: [.init(.adaptive(minimum: 45, maximum: 50), alignment: .top)]) {
 
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
                 ForEach(0 ... 48, id: \.self) { hour in
@@ -90,11 +91,7 @@ public struct HourPicker: View {
                         hours = hour
                         isShowingPicker = false
                     }
-                    .buttonStyle(.plain)
-                    .frame(width: 50, height: 50, alignment: .center)
-                    .background(Color.secondary)
-                    .foregroundColor(Color(UIColor.systemBackground))
-                    .cornerRadius(6)
+                    .buttonStyle(PickerButtonStyle())
                 }
             }
         }

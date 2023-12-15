@@ -85,16 +85,12 @@ public struct MinutesPicker: View {
             }
 
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
-                ForEach(1 ... 59, id: \.self) { minutes in
+                ForEach(0 ... 59, id: \.self) { minutes in
                     Button(String(format: "%02d", minutes)) {
                         self.minutes = minutes
                         isShowingPicker = false
                     }
-                    .buttonStyle(.plain)
-                    .frame(width: 50, height: 50, alignment: .center)
-                    .background(Color.secondary)
-                    .foregroundColor(Color(UIColor.systemBackground))
-                    .cornerRadius(6)
+                    .buttonStyle(PickerButtonStyle())
                 }
             }
         }
