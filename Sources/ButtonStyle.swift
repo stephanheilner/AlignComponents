@@ -24,11 +24,11 @@
 
 import SwiftUI
 
-struct PickerButtonStyle: ButtonStyle {
+public struct PickerButtonStyle: ButtonStyle {
     let tintColor: Color
     let foregroundColor: Color
 
-    init(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary) {
+    public init(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary) {
         self.tintColor = tintColor
         self.foregroundColor = foregroundColor
     }
