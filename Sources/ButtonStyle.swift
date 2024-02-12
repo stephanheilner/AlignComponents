@@ -33,7 +33,7 @@ public struct PickerButtonStyle: ButtonStyle {
         self.foregroundColor = foregroundColor
     }
 
-    func makeBody(configuration: Configuration) -> some View {
+    public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .frame(maxWidth: .infinity, minHeight: 44, maxHeight: .infinity)
             .padding(3)
