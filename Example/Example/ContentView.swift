@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2023 Stephan Heilner
+//  Copyright © 2024 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -34,22 +34,54 @@ struct ContentView: View {
     @State var monthYear: Date?
     @State var year: Int?
     @State var time: TimeInterval?
+    @State var text: String = ""
+
+    @State var dateError: String? = nil
+    @State var minutesError: String? = nil
+    @State var dayError: String? = "Day Error"
+    @State var hoursError: String? = "Hours Error"
+    @State var monthError: String? = "Month Error"
+    @State var monthYearError: String? = "Month/Year Error"
+    @State var yearError: String? = "Year Error"
+    @State var timeError: String? = "Time Error"
+    @State var textError: String? = "Text Error"
 
     var body: some View {
         List {
-            MonthPicker("Month", selection: $month)
-            DayPicker("Day", selection: $day, month: Date().month)
-            YearPicker("Year", selection: $year)
+            Section("Normal") {
+                MonthPicker("Month", selection: $month)
+                DayPicker("Day", selection: $day, month: Date().month)
+                YearPicker("Year", selection: $year)
 
-            HourPicker("Hours", selection: $hours)
-            MinutesPicker("Minutes", selection: $minutes)
+                HourPicker("Hours", selection: $hours)
+                MinutesPicker("Minutes", selection: $minutes)
 
-            HoursMinutesPicker("", selection: $time)
-                .buttonStyle(.plain)
-            MonthYearDatePicker("", selection: $monthYear)
-                .buttonStyle(.plain)
-            MonthDayYearDatePicker("", selection: $date)
-                .buttonStyle(.plain)
+                HoursMinutesPicker("", selection: $time)
+                    .buttonStyle(.plain)
+                MonthYearDatePicker("", selection: $monthYear)
+                    .buttonStyle(.plain)
+                MonthDayYearDatePicker("", selection: $date)
+                    .buttonStyle(.plain)
+                FloatingLabelTextField("Title", text: $text)
+            }
+
+            Section("Error") {
+                MonthPicker("Month", selection: $month, error: $monthError)
+                DayPicker("Day", selection: $day, month: Date().month, error: $dayError)
+                YearPicker("Year", selection: $year, error: $yearError)
+
+                HourPicker("Hours", selection: $hours, error: $hoursError)
+                MinutesPicker("Minutes", selection: $minutes, error: $minutesError)
+
+                HoursMinutesPicker("", selection: $time, error: $timeError)
+                    .buttonStyle(.plain)
+                MonthYearDatePicker("", selection: $monthYear, error: $monthError)
+                    .buttonStyle(.plain)
+                MonthDayYearDatePicker("", selection: $date, error: $dateError)
+                    .buttonStyle(.plain)
+
+                FloatingLabelTextField("Title", text: $text, error: $textError)
+            }
         }
     }
 }

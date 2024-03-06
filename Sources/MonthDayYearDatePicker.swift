@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2023 Stephan Heilner
+//  Copyright © 2024 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -26,6 +26,7 @@ import SwiftUI
 
 public struct MonthDayYearDatePicker: View {
     private let title: LocalizedStringKey
+    private let titleColor: Color
 
     private var debounce: Debounce<Date>?
     private let yearRange: ClosedRange<Int>
@@ -34,10 +35,14 @@ public struct MonthDayYearDatePicker: View {
     @State private var day: Int?
     @State private var year: Int?
 
-    @Binding var selection: Date?
+    @Binding private var selection: Date?
+    @Binding private var error: String?
 
-    public init(_ title: LocalizedStringKey = "", selection: Binding<Date?>, isFuture: Bool = false) {
+    public init(_ title: LocalizedStringKey = "", selection: Binding<Date?>, isFuture: Bool = false, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
         self.title = title
+        _error = error ?? Binding.constant(nil)
+        self.titleColor = titleColor
+
         _selection = selection
         if isFuture {
             yearRange = Date().year ... Date().year + 3
@@ -68,14 +73,21 @@ public struct MonthDayYearDatePicker: View {
                 Text(title)
                     .font(.caption)
                     .padding(.bottom, 5)
+                    .foregroundColor(error != nil ? .red : titleColor)
             }
 
             HStack(alignment: .center, spacing: 20) {
-                YearPicker("Year", selection: $year)
-                MonthPicker("Month", selection: $month)
-                DayPicker("Day", selection: $day, month: month)
+                YearPicker("Year", selection: $year, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
+                MonthPicker("Month", selection: $month, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
+                DayPicker("Day", selection: $day, month: month, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
 
                 Spacer()
+            }
+
+            if let error, !error.isEmpty {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(.red)
             }
         }
         .onChange(of: month) { newValue in

@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2023 Stephan Heilner
+//  Copyright © 2024 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -26,15 +26,20 @@ import SwiftUI
 
 public struct HoursMinutesPicker: View {
     private let title: LocalizedStringKey
+    private let titleColor: Color
     private var debounce: Debounce<TimeInterval>?
 
     @Binding var selection: TimeInterval?
+    @Binding private var error: String?
+
     @State private var hours: Int?
     @State private var minutes: Int?
 
-    public init(_ title: LocalizedStringKey = "", selection: Binding<TimeInterval?>) {
+    public init(_ title: LocalizedStringKey = "", selection: Binding<TimeInterval?>, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
         self.title = title
         _selection = selection
+        _error = error ?? Binding.constant(nil)
+        self.titleColor = titleColor
 
         if let seconds = selection.wrappedValue {
             _hours = State(initialValue: Int(seconds / 3600))
@@ -57,12 +62,25 @@ public struct HoursMinutesPicker: View {
                 Text(title)
                     .font(.caption)
                     .padding(.bottom, 5)
+                    .foregroundColor(error != nil ? .red : titleColor)
             }
             HStack(alignment: .center, spacing: 2) {
-                HourPicker("Hour", selection: $hours)
+                HourPicker("Hour",
+                           selection: $hours,
+                           error: error != nil ? Binding.constant("") : Binding.constant(nil),
+                           titleColor: titleColor)
                 Text(":").padding(.top, 10)
-                MinutesPicker("Minutes", selection: $minutes)
+                MinutesPicker("Minutes",
+                              selection: $minutes,
+                              error: error != nil ? Binding.constant("") : Binding.constant(nil),
+                              titleColor: titleColor)
                 Spacer()
+            }
+
+            if let error, !error.isEmpty {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(.red)
             }
         }
         .onChange(of: hours) { newValue in

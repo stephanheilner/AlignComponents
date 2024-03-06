@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2023 Stephan Heilner
+//  Copyright © 2024 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -27,14 +27,19 @@ import SwiftUI
 
 public struct MonthPicker: View {
     private let titleKey: LocalizedStringKey
+    private let titleColor: Color
 
     @Binding private var selection: Int?
+    @Binding private var error: String?
+
     @State private var isShowingPicker: Bool = false
     @State private var month: Int
 
-    public init(_ titleKey: LocalizedStringKey, selection: Binding<Int?>) {
+    public init(_ titleKey: LocalizedStringKey, selection: Binding<Int?>, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
         self.titleKey = titleKey
         _selection = selection
+        _error = error ?? Binding.constant(nil)
+        self.titleColor = titleColor
 
         if let month = selection.wrappedValue {
             _month = State(initialValue: month)
@@ -47,16 +52,23 @@ public struct MonthPicker: View {
         VStack(alignment: .leading) {
             Text(titleKey)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(error != nil ? .red : titleColor)
 
             Button(action: {
                 isShowingPicker.toggle()
             }, label: {
                 let title = month == -1 ? "--" : Calendar.current.monthSymbols[month - 1]
-                Text(title + " ") + Text(Image(systemName: "chevron.up.chevron.down"))
+                Text(title + " ")
+                    + Text(Image(systemName: "chevron.up.chevron.down"))
             })
             .buttonStyle(.plain)
-            .foregroundColor(.accentColor)
+            .foregroundColor(error != nil ? .red : .accentColor)
+
+            if let error, !error.isEmpty {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(.red)
+            }
         }
         .sheet(isPresented: $isShowingPicker) {
             monthPickerView()

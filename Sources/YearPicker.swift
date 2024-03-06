@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2023 Stephan Heilner
+//  Copyright © 2024 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -27,16 +27,21 @@ import SwiftUI
 
 public struct YearPicker: View {
     private let titleKey: LocalizedStringKey
+    private let titleColor: Color
     private let range: ClosedRange<Int>
 
     @Binding private var selection: Int?
+    @Binding private var error: String?
+
     @State private var isShowingPicker: Bool = false
     @State private var year: Int
 
-    public init(_ titleKey: LocalizedStringKey, selection: Binding<Int?>, range: ClosedRange<Int> = 1900 ... Date().year) {
+    public init(_ titleKey: LocalizedStringKey, selection: Binding<Int?>, range: ClosedRange<Int> = 1900 ... Date().year, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
         self.titleKey = titleKey
         _selection = selection
+        _error = error ?? Binding.constant(nil)
         self.range = range
+        self.titleColor = titleColor
 
         if let year = selection.wrappedValue {
             _year = State(initialValue: year)
@@ -49,7 +54,7 @@ public struct YearPicker: View {
         VStack(alignment: .leading) {
             Text(titleKey)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(error != nil ? .red : titleColor)
 
             Button(action: {
                 isShowingPicker.toggle()
@@ -58,7 +63,13 @@ public struct YearPicker: View {
                 Text(title) + Text(Image(systemName: "chevron.up.chevron.down"))
             })
             .buttonStyle(.plain)
-            .foregroundColor(.accentColor)
+            .foregroundColor(error != nil ? .red : .accentColor)
+
+            if let error, !error.isEmpty {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(.red)
+            }
         }
         .sheet(isPresented: $isShowingPicker) {
             yearPickerView()

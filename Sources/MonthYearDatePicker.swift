@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2023 Stephan Heilner
+//  Copyright © 2024 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -26,16 +26,21 @@ import SwiftUI
 
 public struct MonthYearDatePicker: View {
     private let title: LocalizedStringKey
-    @Binding var selection: Date?
+    private let titleColor: Color
+
+    @Binding private var selection: Date?
+    @Binding private var error: String?
 
     private var debounce: Debounce<Date>?
 
     @State private var month: Int?
     @State private var year: Int?
 
-    public init(_ title: LocalizedStringKey = "", selection: Binding<Date?>) {
+    public init(_ title: LocalizedStringKey = "", selection: Binding<Date?>, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
         self.title = title
         _selection = selection
+        _error = error ?? Binding.constant(nil)
+        self.titleColor = titleColor
 
         if let selectedDate = selection.wrappedValue {
             _month = State(initialValue: selectedDate.month)
@@ -58,12 +63,19 @@ public struct MonthYearDatePicker: View {
                 Text(title)
                     .font(.caption)
                     .padding(.bottom, 5)
+                    .foregroundColor(error != nil ? .red : titleColor)
             }
 
             HStack(alignment: .center, spacing: 20) {
-                YearPicker("Year", selection: $year)
-                MonthPicker("Month", selection: $month)
+                YearPicker("Year", selection: $year, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
+                MonthPicker("Month", selection: $month, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
                 Spacer()
+            }
+
+            if let error, !error.isEmpty {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(.red)
             }
         }
         .onChange(of: month) { newValue in
