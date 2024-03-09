@@ -26,10 +26,21 @@ import Foundation
 import SwiftUI
 
 public struct MultipleChoiceView<Selectable: Identifiable & Hashable>: View {
-    let title: String
-    let options: [Selectable]
-    let optionToString: (Selectable) -> String
-    var selected: Binding<Set<Selectable>>
+    private let title: LocalizedStringKey
+    private let options: [Selectable]
+    private let optionToString: (Selectable) -> String
+    private var selected: Binding<Set<Selectable>>
+
+    public init(title: String, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Set<Selectable>>) {
+        self.init(title: LocalizedStringKey(title), options: options, optionToString: optionToString, selected: selected)
+    }
+
+    public init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Set<Selectable>>) {
+        self.title = title
+        self.options = options
+        self.optionToString = optionToString
+        self.selected = selected
+    }
 
     public var body: some View {
         NavigationLink(destination: LazyView { multiSelectionView() }) {
@@ -61,13 +72,13 @@ public struct MultipleChoiceView<Selectable: Identifiable & Hashable>: View {
     }
 }
 
-public struct MultipleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
-    let title: String
+struct MultipleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
+    let title: LocalizedStringKey
     let options: [Selectable]
     let optionToString: (Selectable) -> String
     @Binding var selected: Set<Selectable>
 
-    public var body: some View {
+    var body: some View {
         List {
             ForEach(options) { selectable in
                 Button(action: {

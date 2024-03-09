@@ -11,7 +11,7 @@
 		D496BB582B081080003E19C2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D496BB572B081080003E19C2 /* ContentView.swift */; };
 		D496BB5A2B081081003E19C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D496BB592B081081003E19C2 /* Assets.xcassets */; };
 		D496BB5D2B081081003E19C2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D496BB5C2B081081003E19C2 /* Preview Assets.xcassets */; };
-		D496BB662B0816E8003E19C2 /* SummitPickers in Frameworks */ = {isa = PBXBuildFile; productRef = D496BB652B0816E8003E19C2 /* SummitPickers */; };
+		D496BB662B0816E8003E19C2 /* AlignComponents in Frameworks */ = {isa = PBXBuildFile; productRef = D496BB652B0816E8003E19C2 /* AlignComponents */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,7 +20,7 @@
 		D496BB572B081080003E19C2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D496BB592B081081003E19C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D496BB5C2B081081003E19C2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		D496BB632B0815E0003E19C2 /* SummitPickers */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SummitPickers; path = ..; sourceTree = "<group>"; };
+		D496BB632B0815E0003E19C2 /* AlignComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AlignComponents; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -28,7 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D496BB662B0816E8003E19C2 /* SummitPickers in Frameworks */,
+				D496BB662B0816E8003E19C2 /* AlignComponents in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,7 +39,7 @@
 			isa = PBXGroup;
 			children = (
 				D496BB542B081080003E19C2 /* Example */,
-				D496BB632B0815E0003E19C2 /* SummitPickers */,
+				D496BB632B0815E0003E19C2 /* AlignComponents */,
 				D496BB532B081080003E19C2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,7 +88,7 @@
 			);
 			name = Example;
 			packageProductDependencies = (
-				D496BB652B0816E8003E19C2 /* SummitPickers */,
+				D496BB652B0816E8003E19C2 /* AlignComponents */,
 			);
 			productName = Example;
 			productReference = D496BB522B081080003E19C2 /* Example.app */;
@@ -361,9 +361,9 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D496BB652B0816E8003E19C2 /* SummitPickers */ = {
+		D496BB652B0816E8003E19C2 /* AlignComponents */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SummitPickers;
+			productName = AlignComponents;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

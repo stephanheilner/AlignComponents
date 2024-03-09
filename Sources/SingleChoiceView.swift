@@ -26,11 +26,11 @@ import Foundation
 import SwiftUI
 
 public struct SingleChoiceView<Selectable: Identifiable & Hashable>: View {
-    let title: LocalizedStringKey
-    let options: [Selectable]
-    let optionToString: (Selectable) -> String
-    var selected: Binding<Selectable?>
-    var showValueAsTitle: Bool = false
+    private let title: LocalizedStringKey
+    private let options: [Selectable]
+    private let optionToString: (Selectable) -> String
+    private var selected: Binding<Selectable?>
+    private var showValueAsTitle: Bool = false
 
     public init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Selectable?>, showValueAsTitle: Bool = false) {
         self.title = title
@@ -41,13 +41,7 @@ public struct SingleChoiceView<Selectable: Identifiable & Hashable>: View {
     }
 
     public init(title: String, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Selectable?>, showValueAsTitle: Bool = false) {
-        self.init(
-            title: LocalizedStringKey(title),
-            options: options,
-            optionToString: optionToString,
-            selected: selected,
-            showValueAsTitle: showValueAsTitle
-        )
+        self.init(title: LocalizedStringKey(title), options: options, optionToString: optionToString, selected: selected, showValueAsTitle: showValueAsTitle)
     }
 
     private func text() -> Text {
@@ -85,7 +79,7 @@ public struct SingleChoiceView<Selectable: Identifiable & Hashable>: View {
     }
 }
 
-public struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
+struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
     @Environment(\.presentationMode) private var presentationMode
 
     let title: LocalizedStringKey
@@ -93,7 +87,7 @@ public struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: Vi
     let optionToString: (Selectable) -> String
     @Binding var selected: Selectable?
 
-    public var body: some View {
+    var body: some View {
         List {
             ForEach(options) { selectable in
                 Button(action: {
