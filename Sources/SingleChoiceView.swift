@@ -29,10 +29,10 @@ public struct SingleChoiceView<Selectable: Identifiable & Hashable>: View {
     private let title: LocalizedStringKey
     private let options: [Selectable]
     private let optionToString: (Selectable) -> String
-    private var selected: Binding<Selectable?>
+    private var selected: Binding<Selectable>
     private var showValueAsTitle: Bool = false
 
-    public init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Selectable?>, showValueAsTitle: Bool = false) {
+    public init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Selectable>, showValueAsTitle: Bool = false) {
         self.title = title
         self.options = options
         self.optionToString = optionToString
@@ -40,24 +40,20 @@ public struct SingleChoiceView<Selectable: Identifiable & Hashable>: View {
         self.showValueAsTitle = showValueAsTitle
     }
 
-    public init(title: String, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Selectable?>, showValueAsTitle: Bool = false) {
-        self.init(title: LocalizedStringKey(title), options: options, optionToString: optionToString, selected: selected, showValueAsTitle: showValueAsTitle)
-    }
-
-    private func text() -> Text {
-        if let selected = selected.wrappedValue {
-            Text(optionToString(selected))
-                .foregroundColor(.primary)
-        } else {
-            Text(Image(systemName: "chevron.right"))
-                .foregroundColor(.secondary)
-        }
+    public init(title: String, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Selectable>, showValueAsTitle: Bool = false) {
+        self.title = LocalizedStringKey(title)
+        self.options = options
+        self.optionToString = optionToString
+        self.selected = selected
+        self.showValueAsTitle = showValueAsTitle
     }
 
     public var body: some View {
         NavigationLink(destination: LazyView { selectionView() }) {
             if showValueAsTitle {
-                text().multilineTextAlignment(.leading)
+                Text(optionToString(selected.wrappedValue))
+                    .foregroundColor(.primary)
+                    .multilineTextAlignment(.leading)
             } else {
                 HStack {
                     Text(title)
@@ -67,7 +63,9 @@ public struct SingleChoiceView<Selectable: Identifiable & Hashable>: View {
 
                     Spacer()
 
-                    text().multilineTextAlignment(.trailing)
+                    Text(optionToString(selected.wrappedValue))
+                        .foregroundColor(.primary)
+                        .multilineTextAlignment(.trailing)
                 }
             }
         }
@@ -79,13 +77,13 @@ public struct SingleChoiceView<Selectable: Identifiable & Hashable>: View {
     }
 }
 
-struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
+private struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
     @Environment(\.presentationMode) private var presentationMode
 
     let title: LocalizedStringKey
     let options: [Selectable]
     let optionToString: (Selectable) -> String
-    @Binding var selected: Selectable?
+    @Binding var selected: Selectable
 
     var body: some View {
         List {
@@ -99,8 +97,8 @@ struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
 
                         Spacer()
 
-                        if selected?.id == selectable.id {
-                            Image(systemName: "checkmark.circle.fill")
+                        if selected.id == selectable.id {
+                            Image(systemName: "checkmark")
                                 .foregroundColor(.accentColor)
                         }
                     }
@@ -112,8 +110,7 @@ struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
         .navigationTitle(title)
     }
 
-    private func toggleSelection(selectable: Selectable?) {
-        guard let selectable else { return }
+    private func toggleSelection(selectable: Selectable) {
         selected = selectable
         presentationMode.wrappedValue.dismiss()
     }
