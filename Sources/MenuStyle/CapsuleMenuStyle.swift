@@ -23,41 +23,32 @@
 //
 
 import Foundation
+import SwiftUI
 
-public class Debounce<T> {
-    private var timeInterval: TimeInterval
-    private let callback: (T) -> Void
-    private var timer: Timer?
-    private var value: T?
+public struct CapsuleMenuStyle: MenuStyle {
+    let tintColor: Color
+    var selected: Bool
 
-    public init(_ timeInterval: TimeInterval, callback: @escaping (T) -> Void) {
-        self.timeInterval = timeInterval
-        self.callback = callback
+    public init(tintColor: Color = .accentColor, selected: Bool = false) {
+        self.tintColor = tintColor
+        self.selected = selected
     }
 
-    public func call(_ t: T) {
-        DispatchQueue.main.async {
-            if self.timeInterval == 0 {
-                self.callback(t)
-            } else {
-                self.value = t
-                self.timer?.invalidate()
-                self.timer = Timer.scheduledTimer(timeInterval: self.timeInterval, target: self, selector: #selector(self.timerFired(sender:)), userInfo: nil, repeats: false)
-            }
-        }
-    }
-
-    @objc
-    private func timerFired(sender _: Any) {
-        guard let value
-        else { return }
-
-        callback(value)
+    public func makeBody(configuration: Configuration) -> some View {
+        Menu(configuration)
+            .font(.body.weight(.medium))
+            .padding(.horizontal, 22)
+            .padding([.top, .bottom], 11)
+            .foregroundColor(selected ? Color.white : tintColor)
+            .background(Capsule().fill(selected ? tintColor : Color.clear))
+            .overlay(
+                Capsule()
+                    .stroke(selected ? Color.white : tintColor, lineWidth: 1)
+            )
+            .animation(.easeOut(duration: 0.1), value: selected)
     }
 }
 
-public extension Debounce where T == Void {
-    func call() {
-        call(())
-    }
+public extension MenuStyle where Self == CapsuleMenuStyle {
+    static var capsule: CapsuleMenuStyle { CapsuleMenuStyle() }
 }

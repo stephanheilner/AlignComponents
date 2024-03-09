@@ -24,40 +24,8 @@
 
 import Foundation
 
-public class Debounce<T> {
-    private var timeInterval: TimeInterval
-    private let callback: (T) -> Void
-    private var timer: Timer?
-    private var value: T?
-
-    public init(_ timeInterval: TimeInterval, callback: @escaping (T) -> Void) {
-        self.timeInterval = timeInterval
-        self.callback = callback
-    }
-
-    public func call(_ t: T) {
-        DispatchQueue.main.async {
-            if self.timeInterval == 0 {
-                self.callback(t)
-            } else {
-                self.value = t
-                self.timer?.invalidate()
-                self.timer = Timer.scheduledTimer(timeInterval: self.timeInterval, target: self, selector: #selector(self.timerFired(sender:)), userInfo: nil, repeats: false)
-            }
-        }
-    }
-
-    @objc
-    private func timerFired(sender _: Any) {
-        guard let value
-        else { return }
-
-        callback(value)
-    }
-}
-
-public extension Debounce where T == Void {
-    func call() {
-        call(())
+public extension String {
+    func trimmed() -> String {
+        String(self).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
