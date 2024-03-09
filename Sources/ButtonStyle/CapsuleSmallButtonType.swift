@@ -24,24 +24,38 @@
 
 import SwiftUI
 
-public struct PickerButtonStyle: ButtonStyle {
-    let tintColor: Color
-    let foregroundColor: Color
+public struct CapsuleSmallButtonStyle: ButtonStyle {
+    private let tintColor: Color
 
-    public init(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary) {
+    public init(tintColor: Color = .accentColor) {
         self.tintColor = tintColor
-        self.foregroundColor = foregroundColor
     }
 
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .frame(maxWidth: .infinity, minHeight: 44, maxHeight: .infinity)
-            .padding(3)
-            .background(configuration.isPressed ? tintColor.opacity(0.6) : tintColor)
-            .foregroundColor(foregroundColor)
-            .cornerRadius(6)
-            .overlay(RoundedRectangle(cornerRadius: 6).stroke(foregroundColor.opacity(0.5), lineWidth: 0.5))
+            .font(.subheadline)
+            .padding([.leading, .trailing], 11)
+            .padding([.top, .bottom], 5)
+            .foregroundColor(configuration.isPressed ? tintColor.opacity(0.6) : tintColor)
+            .overlay(
+                Capsule()
+                    .stroke(configuration.isPressed ? tintColor.opacity(0.6) : tintColor, lineWidth: 1)
+            )
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
+    }
+}
+
+public extension ButtonStyle where Self == CapsuleSmallButtonStyle {
+    static var capsuleSmall: CapsuleSmallButtonStyle { CapsuleSmallButtonStyle() }
+}
+
+#Preview {
+    VStack {
+        Button("Button 1") {}
+            .buttonStyle(CapsuleSmallButtonStyle())
+
+        Button("Button 2") {}
+            .buttonStyle(.capsuleSmall)
     }
 }
