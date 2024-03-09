@@ -1,10 +1,10 @@
-# SummitPickers
+# AlignComponents
 
 A collection of custom date and time pickers.
 
 ## License
 
-SummitPickers is available under the MIT license. See the LICENSE file for more info.
+AlignComponents is available under the MIT license. See the LICENSE file for more info.
 
 ## Usage
 

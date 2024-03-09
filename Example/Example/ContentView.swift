@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 //
 
-import SummitPickers
+import AlignComponents
 import SwiftUI
 
 struct ContentView: View {

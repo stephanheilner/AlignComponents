@@ -4,20 +4,20 @@
 import PackageDescription
 
 let package = Package(
-    name: "SummitPickers",
+    name: "AlignComponents",
     platforms: [
         .iOS(.v16),
     ],
     products: [
         .library(
-            name: "SummitPickers",
-            targets: ["SummitPickers"]
+            name: "AlignComponents",
+            targets: ["AlignComponents"]
         ),
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "SummitPickers",
+            name: "AlignComponents",
             dependencies: []
         ),
     ],
