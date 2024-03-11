@@ -49,8 +49,8 @@ public struct SingleChoiceOptionalView<Selectable: Identifiable & Hashable>: Vie
             Text(optionToString(selected))
                 .foregroundColor(.primary)
         } else {
-            Text(Image(systemName: "chevron.right"))
-                .foregroundColor(.secondary)
+            Text("")
+                .foregroundColor(.primary)
         }
     }
 
@@ -84,12 +84,22 @@ private struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: V
 
     let title: LocalizedStringKey
     let options: [Selectable]
+    @State var filteredOptions: [Selectable]
     let optionToString: (Selectable) -> String
     @Binding var selected: Selectable?
+    @State var searchText: String = ""
+
+    init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Selectable?>) {
+        self.title = title
+        self.options = options
+        filteredOptions = options
+        self.optionToString = optionToString
+        _selected = selected
+    }
 
     var body: some View {
         List {
-            ForEach(options) { selectable in
+            ForEach(filteredOptions) { selectable in
                 Button(action: {
                     toggleSelection(selectable: selectable)
                 }) {
@@ -106,6 +116,18 @@ private struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: V
                     }
                 }
                 .tag(selectable.id)
+            }
+        }
+        .searchable(
+            text: $searchText,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "Search"
+        )
+        .onChange(of: searchText) { searchText in
+            if searchText.isBlank {
+                filteredOptions = options
+            } else {
+                filteredOptions = options.filter { optionToString($0).uppercased().contains(searchText.uppercased()) }
             }
         }
         .listStyle(GroupedListStyle())

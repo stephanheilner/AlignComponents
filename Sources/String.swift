@@ -25,7 +25,6 @@
 import Foundation
 
 public extension String {
-    func trimmed() -> String {
-        String(self).trimmingCharacters(in: .whitespacesAndNewlines)
-    }
+    func trimmed() -> String { String(self).trimmingCharacters(in: .whitespacesAndNewlines) }
+    var isBlank: Bool { trimmed().isEmpty }
 }
