@@ -35,6 +35,7 @@ struct ContentView: View {
     @State var year: Int?
     @State var time: TimeInterval?
     @State var text: String = ""
+    @State var password: String = ""
 
     @State var dateError: String? = nil
     @State var minutesError: String? = nil
@@ -45,6 +46,7 @@ struct ContentView: View {
     @State var yearError: String? = "Year Error"
     @State var timeError: String? = "Time Error"
     @State var textError: String? = "Text Error"
+    @State var passwordError: String? = "Password Error"
 
     var body: some View {
         List {
@@ -63,6 +65,7 @@ struct ContentView: View {
                 MonthDayYearDatePicker("", selection: $date)
                     .buttonStyle(.plain)
                 FloatingLabelTextField("Title", text: $text)
+                FloatingLabelTextField("Password", text: $password, isSecure: true, error: $passwordError)
             }
 
             Section("Error") {

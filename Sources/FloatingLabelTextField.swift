@@ -34,6 +34,7 @@ public struct FloatingLabelTextField: View {
     @State private var isSecureTextEntry: Bool = false
     @FocusState private var isFocused: Bool
 
+    private var isSecure: Bool = false
     private var placeholder: LocalizedStringKey = ""
     private var isFloating: Bool { !text.isEmpty }
 
@@ -45,9 +46,11 @@ public struct FloatingLabelTextField: View {
         _text = text
         _error = error ?? Binding.constant(nil)
 
+        self.isSecure = isSecure
         self.placeholder = placeholder
-        isSecureTextEntry = isSecure
-        isPasswordHidden = isSecure
+        
+        _isSecureTextEntry = State(initialValue: isSecure)
+        _isPasswordHidden = State(initialValue: isSecure)
     }
 
     public var body: some View {
