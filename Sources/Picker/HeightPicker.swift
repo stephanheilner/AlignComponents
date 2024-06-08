@@ -49,7 +49,7 @@ public struct HeightPicker: View {
         }
 
         debounce = Debounce<(Int, Int)>(0.3) { [self] feet, inches in
-            self.selection = String(format: "$d' $d\"", feet, inches)
+            self.selection = String(format: "%d' %d\"", feet, inches)
         }
     }
 

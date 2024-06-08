@@ -24,20 +24,20 @@
 
 import Foundation
 
-extension Date {
+public extension Date {
     var calendar: Calendar {
         Calendar.autoupdatingCurrent
     }
 
-    public var year: Int {
+    var year: Int {
         calendar.dateComponents([.year], from: self).year ?? 0
     }
 
-    public var month: Int {
+    var month: Int {
         calendar.dateComponents([.month], from: self).month ?? 0
     }
 
-    public var day: Int {
+    var day: Int {
         calendar.dateComponents([.day], from: self).day ?? 0
     }
 

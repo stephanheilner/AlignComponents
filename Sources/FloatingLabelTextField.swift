@@ -48,7 +48,7 @@ public struct FloatingLabelTextField: View {
 
         self.isSecure = isSecure
         self.placeholder = placeholder
-        
+
         _isSecureTextEntry = State(initialValue: isSecure)
         _isPasswordHidden = State(initialValue: isSecure)
     }

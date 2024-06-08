@@ -63,7 +63,7 @@ public struct WeightPicker: View {
             weightPickerView()
         }
         .onChange(of: weight) { newValue in
-            selection = String(format: "$d lbs", newValue)
+            selection = String(format: "%d lbs", newValue)
         }
     }
 
