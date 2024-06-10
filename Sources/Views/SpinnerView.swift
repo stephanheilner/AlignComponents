@@ -24,7 +24,7 @@
 
 import SwiftUI
 
-struct SpinnerView: View {
+public struct SpinnerView: View {
     let rotationTime: Double = 0.75
     let animationTime: Double = 1.9 // Sum of all animation times
     let fullRotation: Angle = .degrees(360)
@@ -38,7 +38,7 @@ struct SpinnerView: View {
     @State var rotationDegreeS2 = initialDegree
     @State var rotationDegreeS3 = initialDegree
 
-    var body: some View {
+    public var body: some View {
         ZStack {
             // S3
             SpinnerCircle(start: spinnerStart, end: spinnerEndS2S3, rotation: rotationDegreeS3, color: Color.accentColor)
@@ -59,7 +59,7 @@ struct SpinnerView: View {
 
     // MARK: Animation methods
 
-    func animateSpinner(with duration: Double, completion: @escaping (() -> Void)) {
+    public func animateSpinner(with duration: Double, completion: @escaping (() -> Void)) {
         Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { _ in
             withAnimation(Animation.easeInOut(duration: rotationTime)) {
                 completion()
@@ -67,7 +67,7 @@ struct SpinnerView: View {
         }
     }
 
-    func animateSpinner() {
+    public func animateSpinner() {
         animateSpinner(with: rotationTime) { spinnerEndS1 = 1.0 }
 
         animateSpinner(with: (rotationTime * 2) - 0.025) {
@@ -88,13 +88,13 @@ struct SpinnerView: View {
 
 // MARK: SpinnerCircle
 
-struct SpinnerCircle: View {
+public struct SpinnerCircle: View {
     var start: CGFloat
     var end: CGFloat
     var rotation: Angle
     var color: Color
 
-    var body: some View {
+    public var body: some View {
         Circle()
             .trim(from: start, to: end)
             .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round))

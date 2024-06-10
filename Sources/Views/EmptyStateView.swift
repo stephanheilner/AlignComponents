@@ -25,10 +25,10 @@
 import Foundation
 import SwiftUI
 
-struct EmptyStateView<Content: View>: View {
-    @ViewBuilder let content: Content
+public struct EmptyStateView<Content: View>: View {
+    @ViewBuilder public let content: Content
 
-    var body: some View {
+    public var body: some View {
         HStack {
             Spacer()
 
