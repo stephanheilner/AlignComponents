@@ -31,7 +31,7 @@ public struct EmptyStateView<Content: View>: View {
     public init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content
     }
-    
+
     public var body: some View {
         HStack {
             Spacer()
