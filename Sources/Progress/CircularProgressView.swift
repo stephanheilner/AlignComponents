@@ -72,14 +72,3 @@ public struct CircularProgressView: View {
         }
     }
 }
-
-extension NumberFormatter {
-    static let percent: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        formatter.multiplier = 1
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 1
-        return formatter
-    }()
-}

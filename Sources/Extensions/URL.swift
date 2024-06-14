@@ -24,21 +24,24 @@
 
 import Foundation
 
-public extension NumberFormatter {
-    static let currency: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        return formatter
-    }()
+public extension URL {
+    /// Append parameters to the existing query string. Well understood if the parameters are unique. This will leave existing parameters and simply add in the new name and value pairs provided in the parameters argument.
+    ///
+    /// - Parameter parameters: A dictionary of new names and value pairs to add to the query string.
+    /// - Returns: Returns a valid URL if adding the parameters does not cause problems.
+    func appendingQueryStringParameters(_ parameters: [String: String]) -> URL {
+        guard var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false)
+        else { return self }
 
-    static let percent: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        formatter.multiplier = 1
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 1
-        return formatter
-    }()
+        // Code below borrowed from Swifter.Swift
+        var items = urlComponents.queryItems ?? []
+        items += parameters.map { URLQueryItem(name: $0, value: $1) }
+        urlComponents.queryItems = items
+
+        return urlComponents.url ?? self
+    }
+
+    var resumeDataFileUrl: URL {
+        deletingPathExtension().appendingPathExtension("resume")
+    }
 }

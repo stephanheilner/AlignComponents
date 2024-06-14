@@ -22,23 +22,10 @@
 //  THE SOFTWARE.
 //
 
-import Foundation
+import UIKit
 
-public extension NumberFormatter {
-    static let currency: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        return formatter
-    }()
-
-    static let percent: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        formatter.multiplier = 1
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 1
-        return formatter
-    }()
+public extension UIDevice {
+    static func isIPad() -> Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+    }
 }

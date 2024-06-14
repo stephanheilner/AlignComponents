@@ -24,21 +24,14 @@
 
 import Foundation
 
-public extension NumberFormatter {
-    static let currency: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        return formatter
-    }()
+public extension [String: String] {
+    func queryItems() -> [URLQueryItem] {
+        map { URLQueryItem(name: $0, value: $1) }
+    }
 
-    static let percent: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        formatter.multiplier = 1
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 1
-        return formatter
-    }()
+    func httpBody() -> Data? {
+        var components = URLComponents()
+        components.queryItems = queryItems()
+        return components.percentEncodedQuery?.data(using: .utf8)
+    }
 }

@@ -24,11 +24,11 @@
 
 import Foundation
 
-extension Collection {
+public extension Collection {
     var isNotEmpty: Bool { !isEmpty }
 }
 
-extension Array where Element: Encodable {
+public extension Array where Element: Encodable {
     func ifNotEmpty() -> Array? {
         isEmpty ? nil : self
     }
@@ -44,7 +44,35 @@ extension Array where Element: Encodable {
     }
 }
 
-extension Set where Element: Encodable {
+public extension Array {
+    func chunked(into size: Int) -> [[Element]] {
+        stride(from: 0, to: count, by: size).map {
+            Array(self[$0 ..< Swift.min($0 + size, count)])
+        }
+    }
+}
+
+public extension Optional where Wrapped: Collection {
+    var isEmpty: Bool {
+        switch self {
+        case let .some(wrapped):
+            wrapped.isEmpty
+        case .none:
+            true
+        }
+    }
+
+    var isNotEmpty: Bool {
+        switch self {
+        case let .some(wrapped):
+            wrapped.isNotEmpty
+        case .none:
+            false
+        }
+    }
+}
+
+public extension Set where Element: Encodable {
     func ifNotEmpty() -> Set? {
         isEmpty ? nil : self
     }

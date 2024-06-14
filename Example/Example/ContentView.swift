@@ -85,6 +85,13 @@ struct ContentView: View {
 
                 FloatingLabelTextField("Title", text: $text, error: $textError)
             }
+
+            Section("Button Styles") {
+                Button("Capsule") {}.buttonStyle(.capsule)
+                Button("Capsule Filled") {}.buttonStyle(.capsuleFilled)
+                Button("Capsule Small") {}.buttonStyle(.capsuleSmall)
+                Button("Capsule Small Filled") {}.buttonStyle(.capsuleSmallFilled)
+            }
         }
     }
 }

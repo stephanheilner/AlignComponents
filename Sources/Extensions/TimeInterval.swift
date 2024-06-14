@@ -22,23 +22,27 @@
 //  THE SOFTWARE.
 //
 
+import CoreMedia
 import Foundation
 
-public extension NumberFormatter {
-    static let currency: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        return formatter
-    }()
+public extension TimeInterval {
+    var time: CMTime { CMTimeMakeWithSeconds(self, preferredTimescale: Int32(kCMTimeMaxTimescale)) }
 
-    static let percent: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        formatter.multiplier = 1
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 1
-        return formatter
-    }()
+    func date() -> Date {
+        Date(timeIntervalSince1970: self)
+    }
+
+    func toString(style: DateComponentsFormatter.UnitsStyle) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second, .nanosecond]
+        formatter.unitsStyle = style
+        return formatter.string(from: self) ?? ""
+    }
+}
+
+public extension CMTime {
+    static let zeroSeconds = CMTime(seconds: 0, preferredTimescale: 1)
+    static let oneSecond = CMTime(seconds: 1, preferredTimescale: 1)
+
+    var timeInterval: TimeInterval { CMTimeGetSeconds(self) }
 }
