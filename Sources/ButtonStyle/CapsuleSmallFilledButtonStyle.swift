@@ -37,9 +37,9 @@ public struct CapsuleSmallFilledButtonStyle: ButtonStyle {
 
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.body.weight(.medium))
-            .padding([.leading, .trailing], 11)
-            .padding([.top, .bottom], 5)
+            .font(.subheadline)
+            .padding(.horizontal, 11)
+            .padding(.vertical, 5)
             .foregroundColor(textColor)
             .background(selected ? Color.white : (configuration.isPressed ? tintColor.opacity(0.6) : tintColor))
             .clipShape(Capsule())
@@ -58,6 +58,6 @@ public extension ButtonStyle where Self == CapsuleFilledButtonStyle {
             .buttonStyle(CapsuleSmallFilledButtonStyle())
 
         Button("Button 2") {}
-            .buttonStyle(.capsuleFilled)
+            .buttonStyle(.capsuleSmallFilled)
     }
 }

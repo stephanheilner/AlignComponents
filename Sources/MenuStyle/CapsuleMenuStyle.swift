@@ -38,7 +38,7 @@ public struct CapsuleMenuStyle: MenuStyle {
         Menu(configuration)
             .font(.body.weight(.medium))
             .padding(.horizontal, 22)
-            .padding([.top, .bottom], 11)
+            .padding(.vertical, 11)
             .foregroundColor(selected ? Color.white : tintColor)
             .background(Capsule().fill(selected ? tintColor : Color.clear))
             .overlay(

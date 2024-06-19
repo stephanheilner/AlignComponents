@@ -34,8 +34,8 @@ public struct CapsuleSmallButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.subheadline)
-            .padding([.leading, .trailing], 11)
-            .padding([.top, .bottom], 5)
+            .padding(.horizontal, 11)
+            .padding(.vertical, 5)
             .foregroundColor(configuration.isPressed ? tintColor.opacity(0.6) : tintColor)
             .overlay(
                 Capsule()

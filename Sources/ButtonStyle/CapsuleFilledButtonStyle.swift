@@ -38,8 +38,8 @@ public struct CapsuleFilledButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.body.weight(.medium))
-            .padding([.leading, .trailing], 22)
-            .padding([.top, .bottom], 11)
+            .padding(.horizontal, 22)
+            .padding(.vertical, 11)
             .foregroundColor(textColor)
             .background(selected ? Color.white : (configuration.isPressed ? tintColor.opacity(0.6) : tintColor))
             .clipShape(Capsule())
