@@ -31,12 +31,13 @@ public struct MonthYearDatePicker: View {
     @Binding private var selection: Date?
     @Binding private var error: String?
 
+    private let yearRange: ClosedRange<Int>
     private var debounce: Debounce<Date>?
 
     @State private var month: Int?
     @State private var year: Int?
 
-    public init(_ title: LocalizedStringKey = "", selection: Binding<Date?>, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
+    public init(_ title: LocalizedStringKey = "", selection: Binding<Date?>, isFuture: Bool = false, upToYear: Int = Date().year + 10, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
         self.title = title
         _selection = selection
         _error = error ?? Binding.constant(nil)
@@ -48,6 +49,12 @@ public struct MonthYearDatePicker: View {
         } else {
             _month = State(initialValue: -1)
             _year = State(initialValue: -1)
+        }
+
+        if isFuture {
+            yearRange = Date().year ... upToYear
+        } else {
+            yearRange = 1900 ... Date().year
         }
 
         debounce = Debounce<Date>(0.3) { [self] date in
@@ -67,7 +74,7 @@ public struct MonthYearDatePicker: View {
             }
 
             HStack(alignment: .center, spacing: 20) {
-                YearPicker("Year", selection: $year, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
+                YearPicker("Year", selection: $year, range: yearRange, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
                 MonthPicker("Month", selection: $month, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
                 Spacer()
             }

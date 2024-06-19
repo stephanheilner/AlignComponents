@@ -89,11 +89,13 @@ public struct HUDMessageView: View {
         VStack(spacing: 10) {
             Text(message.title)
                 .foregroundColor(.white)
+                .multilineTextAlignment(.center)
                 .fontWeight(.bold)
 
             if let text = message.text {
                 Text(text)
                     .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
             }
 
             if message.showSpinner {

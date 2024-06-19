@@ -38,14 +38,14 @@ public struct MonthDayYearDatePicker: View {
     @Binding private var selection: Date?
     @Binding private var error: String?
 
-    public init(_ title: LocalizedStringKey = "", selection: Binding<Date?>, isFuture: Bool = false, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
+    public init(_ title: LocalizedStringKey = "", selection: Binding<Date?>, isFuture: Bool = false, upToYear: Int = Date().year + 10, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
         self.title = title
         _error = error ?? Binding.constant(nil)
         self.titleColor = titleColor
 
         _selection = selection
         if isFuture {
-            yearRange = Date().year ... Date().year + 3
+            yearRange = Date().year ... upToYear
         } else {
             yearRange = 1900 ... Date().year
         }
