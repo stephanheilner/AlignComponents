@@ -82,35 +82,6 @@ public extension String {
         return self
     }
 
-    var trimTrailingZero: String {
-        let string = trimmed()
-        return if isNotEmpty {
-            if string.contains(".") {
-                string
-                    .replacingOccurrences(of: "0*$", with: "", options: .regularExpression)
-                    .replacingOccurrences(of: "\\.$", with: "", options: .regularExpression)
-            } else {
-                string
-            }
-        } else {
-            string
-        }
-    }
-
-    func isNumeric(allowHangingDecimal: Bool = false) -> Bool {
-        if allowHangingDecimal, self == "." {
-            return true
-        }
-        if allowHangingDecimal, hasSuffix(".") {
-            let beforeLastDecimal = take(count - 1)
-            return beforeLastDecimal.isNumeric()
-        }
-        if hasPrefix(".") {
-            return tail(count - 1).isNumeric()
-        }
-        return matches("-?[0-9]+(\\.[0-9]+)?")
-    }
-
     func take(_ numberOfElements: Int) -> String {
         String(prefix(numberOfElements))
     }
