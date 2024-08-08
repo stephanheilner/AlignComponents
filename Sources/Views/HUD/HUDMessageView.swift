@@ -25,59 +25,6 @@
 import Foundation
 import SwiftUI
 
-public struct HUD<Content: View>: View {
-    @ViewBuilder let content: () -> Content
-
-    @Environment(\.dismissHUD) var dismissHUD
-    @Environment(\.presentationMode) var presentationMode
-
-    private let backgroundColor: Color
-    private let cornerRadius: CGFloat
-
-    public init(backgroundColor: Color = Color.darkGray, cornerRadius: CGFloat = 20, @ViewBuilder content: @escaping () -> Content) {
-        self.backgroundColor = backgroundColor
-        self.cornerRadius = cornerRadius
-        self.content = content
-    }
-
-    public var body: some View {
-        content()
-            .foregroundColor(Color.systemBackground)
-            .padding(.horizontal, 12)
-            .padding(16)
-            .background(backgroundColor)
-            .cornerRadius(cornerRadius)
-            .overlay(RoundedRectangle(cornerRadius: 20).stroke(.primary, lineWidth: 1))
-            .onReceive(dismissHUD) {
-                presentationMode.wrappedValue.dismiss()
-            }
-    }
-}
-
-public struct HUDMessage {
-    let title: LocalizedStringKey
-    let text: LocalizedStringKey?
-    let showSpinner: Bool
-    var onDismiss: (() -> Void)?
-    var onConfirm: (() -> Void)?
-
-    public init(title: LocalizedStringKey, text: LocalizedStringKey? = nil, showSpinner: Bool = false, onDismiss: (() -> Void)? = nil, onConfirm: (() -> Void)? = nil) {
-        self.title = title
-        self.text = text
-        self.showSpinner = showSpinner
-        self.onDismiss = onDismiss
-        self.onConfirm = onConfirm
-    }
-
-    public init(title: String, text: String? = nil, onDismiss: (() -> Void)? = nil, showSpinner: Bool = false, onConfirm: (() -> Void)? = nil) {
-        self.title = LocalizedStringKey(title)
-        self.text = text.flatMap { LocalizedStringKey($0) }
-        self.showSpinner = showSpinner
-        self.onDismiss = onDismiss
-        self.onConfirm = onConfirm
-    }
-}
-
 public struct HUDMessageView: View {
     let message: HUDMessage
 
@@ -88,13 +35,13 @@ public struct HUDMessageView: View {
     public var body: some View {
         VStack(spacing: 10) {
             Text(message.title)
-                .foregroundColor(.white)
+                .foregroundColor(.primary)
                 .multilineTextAlignment(.center)
-                .fontWeight(.bold)
+                .fontWeight(.medium)
 
             if let text = message.text {
                 Text(text)
-                    .foregroundColor(.white)
+                    .foregroundColor(.primary)
                     .multilineTextAlignment(.center)
             }
 
@@ -120,11 +67,5 @@ public struct HUDMessageView: View {
                 .padding(.top, 5)
             }
         }
-    }
-}
-
-#Preview {
-    HUD {
-        HUDMessageView(message: HUDMessage(title: "Testing..."))
     }
 }
