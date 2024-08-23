@@ -135,8 +135,9 @@ private struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: V
     }
 
     private func toggleSelection(selectable: Selectable?) {
-        guard let selectable else { return }
         selected = selectable
-        presentationMode.wrappedValue.dismiss()
+        if selectable != nil {
+            presentationMode.wrappedValue.dismiss()
+        }
     }
 }

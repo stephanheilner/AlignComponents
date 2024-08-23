@@ -56,10 +56,11 @@ public struct MultipleChoiceView<Selectable: Identifiable & Hashable>: View {
 
                 VStack(alignment: .leading, spacing: 0) {
                     ForEach(Array(selected.wrappedValue)) { option in
-                        Text("\u{2022} \(optionToString(option))")
-                            .foregroundColor(.primary)
-                            .multilineTextAlignment(.leading)
-                            .font(.subheadline)
+                        HStack(alignment: .top) {
+                            Text("\u{2022}")
+                            Text(optionToString(option))
+                        }
+                        .font(.subheadline)
                     }
                 }
             }
