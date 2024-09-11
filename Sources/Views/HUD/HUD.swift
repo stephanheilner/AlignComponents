@@ -48,6 +48,7 @@ public struct HUD<Content: View>: View {
             .background(backgroundColor)
             .cornerRadius(cornerRadius)
             .overlay(RoundedRectangle(cornerRadius: 20).stroke(.primary.opacity(0.3), lineWidth: 1))
+            .padding(.horizontal, 30)
             .onReceive(dismissHUD) {
                 presentationMode.wrappedValue.dismiss()
             }
