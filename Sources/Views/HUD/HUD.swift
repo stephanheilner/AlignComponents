@@ -35,7 +35,7 @@ public struct HUD<Content: View>: View {
     private let cornerRadius: CGFloat
     private let padding: CGFloat
 
-    public init(backgroundColor: Color = Color(UIColor.systemGray4), cornerRadius: CGFloat = 20, padding: CGFloat = 30, @ViewBuilder content: @escaping () -> Content) {
+    public init(backgroundColor: Color = Color.dynamicColor(Color(0xF4F1EF), darkColor: Color(UIColor.systemGray4)), cornerRadius: CGFloat = 20, padding: CGFloat = 30, @ViewBuilder content: @escaping () -> Content) {
         self.backgroundColor = backgroundColor
         self.cornerRadius = cornerRadius
         self.padding = padding

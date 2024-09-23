@@ -35,13 +35,13 @@ public struct HUDMessageView: View {
     public var body: some View {
         VStack(spacing: 10) {
             Text(message.title)
-                .foregroundColor(.primary)
+                .foregroundColor(.primary.opacity(0.8))
                 .multilineTextAlignment(.center)
                 .fontWeight(.medium)
 
             if let text = message.text {
                 Text(text)
-                    .foregroundColor(.primary)
+                    .foregroundColor(.primary.opacity(0.8))
                     .multilineTextAlignment(.center)
             }
 
@@ -55,12 +55,12 @@ public struct HUDMessageView: View {
                     Spacer()
                     if let onDismiss = message.onDismiss {
                         Button("Cancel", action: onDismiss)
-                            .buttonStyle(CapsuleButtonStyle(tintColor: Color(UIColor.dynamicColor(.darkGray, darkColor: .lightGray))))
+                            .buttonStyle(CapsuleButtonStyle(tintColor: .hudText))
                         Spacer()
                     }
                     if let onConfirm = message.onConfirm {
                         Button("OK", action: onConfirm)
-                            .buttonStyle(CapsuleFilledButtonStyle(tintColor: .white, textColor: .darkGray))
+                            .buttonStyle(CapsuleFilledButtonStyle(tintColor: .hudText, textColor: .hudBackground))
                         Spacer()
                     }
                 }

@@ -46,8 +46,11 @@ public extension Color {
     static let secondarySystemGroupedBackground = Color(UIColor.secondarySystemGroupedBackground)
     static let tertiarySystemGroupedBackground = Color(UIColor.tertiarySystemGroupedBackground)
 
-    static let darkGray = Color(UIColor.darkGray)
-    static let lightGray = Color(UIColor.lightGray)
+    static let lightGray = Color(0xF4F1EF)
+    static let darkGray = Color(0x737270)
+
+    static let hudBackground = Color.dynamicColor(lightGray, darkColor: darkGray)
+    static let hudText = Color.dynamicColor(darkGray, darkColor: lightGray)
 }
 
 public extension UIColor {
