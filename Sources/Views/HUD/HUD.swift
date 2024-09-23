@@ -28,15 +28,17 @@ import SwiftUI
 public struct HUD<Content: View>: View {
     @ViewBuilder let content: () -> Content
 
-    @Environment(\.dismissHUD) var dismissHUD
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismissHUD) private var dismissHUD
+    @Environment(\.presentationMode) private var presentationMode
 
     private let backgroundColor: Color
     private let cornerRadius: CGFloat
+    private let padding: CGFloat
 
-    public init(backgroundColor: Color = Color.tertiarySystemGroupedBackground, cornerRadius: CGFloat = 20, @ViewBuilder content: @escaping () -> Content) {
+    public init(backgroundColor: Color = Color(UIColor.systemGray4), cornerRadius: CGFloat = 20, padding: CGFloat = 30, @ViewBuilder content: @escaping () -> Content) {
         self.backgroundColor = backgroundColor
         self.cornerRadius = cornerRadius
+        self.padding = padding
         self.content = content
     }
 
@@ -44,11 +46,11 @@ public struct HUD<Content: View>: View {
         content()
             .foregroundColor(Color.systemBackground)
             .padding(.horizontal, 12)
-            .padding(30)
+            .padding(padding)
             .background(backgroundColor)
-            .cornerRadius(cornerRadius)
-            .overlay(RoundedRectangle(cornerRadius: 20).stroke(.primary.opacity(0.3), lineWidth: 1))
-            .padding(.horizontal, 30)
+            .cornerRadius(20)
+            .overlay(RoundedRectangle(cornerRadius: cornerRadius).stroke(.primary.opacity(0.3), lineWidth: 1))
+            .padding(.horizontal, padding)
             .onReceive(dismissHUD) {
                 presentationMode.wrappedValue.dismiss()
             }

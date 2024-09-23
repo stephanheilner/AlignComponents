@@ -26,13 +26,14 @@ import Foundation
 import SwiftUI
 
 public extension View {
-    func hud(hudMessage: Binding<HUDMessage?>) -> some View {
-        modifier(HUDViewModifier(hudMessage: hudMessage))
+    func hud(hudMessage: Binding<HUDMessage?>, duration: TimeInterval = 3) -> some View {
+        modifier(HUDViewModifier(hudMessage: hudMessage, duration: duration))
     }
 }
 
 public struct HUDViewModifier: ViewModifier {
     @Binding var hudMessage: HUDMessage?
+    let duration: TimeInterval
     @State private var workItem: DispatchWorkItem?
 
     public func body(content: Content) -> some View {
@@ -69,7 +70,9 @@ public struct HUDViewModifier: ViewModifier {
         }
 
         workItem = task
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: task)
+        if hudMessage?.onDismiss == nil, hudMessage?.onConfirm == nil {
+            DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: task)
+        }
     }
 
     private func dismissHUD() {

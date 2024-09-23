@@ -30,18 +30,9 @@ private struct DismissHUDKey: EnvironmentKey {
     static let defaultValue: PassthroughSubject<Void, Never> = .init()
 }
 
-private struct SignOutKey: EnvironmentKey {
-    static let defaultValue: PassthroughSubject<Void, Never> = .init()
-}
-
 public extension EnvironmentValues {
     var dismissHUD: PassthroughSubject<Void, Never> {
         get { self[DismissHUDKey.self] }
         set { self[DismissHUDKey.self] = newValue }
-    }
-
-    var signOut: PassthroughSubject<Void, Never> {
-        get { self[SignOutKey.self] }
-        set { self[SignOutKey.self] = newValue }
     }
 }

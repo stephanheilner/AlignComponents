@@ -48,8 +48,30 @@ struct ContentView: View {
     @State var textError: String? = "Text Error"
     @State var passwordError: String? = "Password Error"
 
+    @State var hudMessage: HUDMessage? = nil
+
     var body: some View {
         List {
+            Section("HUD") {
+                Button("HUD with Auto Dismiss") {
+                    hudMessage = HUDMessage(title: "HUD with Auto Dismiss (after 3 seconds)")
+                }
+                Button("HUD with OK") {
+                    hudMessage = HUDMessage(title: "HUD with OK", onConfirm: {
+                        hudMessage = nil
+                    })
+                }
+                Button("HUD with OK & Dismiss") {
+                    hudMessage = HUDMessage(
+                        title: "HUD with OK & Dismiss",
+                        onDismiss: {
+                            hudMessage = nil
+                        }, onConfirm: {
+                            hudMessage = HUDMessage(title: "Dismiss after 3 seconds")
+                        }
+                    )
+                }
+            }
             Section("Normal") {
                 MonthPicker("Month", selection: $month)
                 DayPicker("Day", selection: $day, month: Date().month)
@@ -93,6 +115,7 @@ struct ContentView: View {
                 Button("Capsule Small Filled") {}.buttonStyle(.capsuleSmallFilled)
             }
         }
+        .hud(hudMessage: $hudMessage)
     }
 }
 

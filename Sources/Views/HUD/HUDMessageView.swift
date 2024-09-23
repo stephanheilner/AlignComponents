@@ -55,7 +55,7 @@ public struct HUDMessageView: View {
                     Spacer()
                     if let onDismiss = message.onDismiss {
                         Button("Cancel", action: onDismiss)
-                            .buttonStyle(CapsuleButtonStyle(tintColor: Color.white))
+                            .buttonStyle(CapsuleButtonStyle(tintColor: Color(UIColor.dynamicColor(.darkGray, darkColor: .lightGray))))
                         Spacer()
                     }
                     if let onConfirm = message.onConfirm {
@@ -69,3 +69,5 @@ public struct HUDMessageView: View {
         }
     }
 }
+
+extension Color {}

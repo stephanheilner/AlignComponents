@@ -80,4 +80,34 @@ public extension UIColor {
             Int(alpha * multiplier)
         )
     }
+
+    static func dynamicColor(_ defaultColor: UIColor, darkColor: UIColor? = nil) -> UIColor {
+        guard let darkColor
+        else { return defaultColor }
+
+        return UIColor { traitCollection -> UIColor in
+            switch traitCollection.userInterfaceStyle {
+            case .dark:
+                return darkColor
+            case .light, .unspecified:
+                return defaultColor
+            @unknown default:
+                return defaultColor
+            }
+        }
+    }
+
+    var lightModeColor: UIColor {
+        resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
+    }
+
+    var darkModeColor: UIColor {
+        resolvedColor(with: UITraitCollection(userInterfaceStyle: .dark))
+    }
+}
+
+public extension Color {
+    static func dynamicColor(_ defaultColor: Color, darkColor: Color? = nil) -> Color {
+        Color(UIColor.dynamicColor(UIColor(defaultColor), darkColor: darkColor.flatMap { UIColor($0) }))
+    }
 }
