@@ -27,21 +27,27 @@ import SwiftUI
 
 public struct HUDMessageView: View {
     let message: HUDMessage
+    let tintColor: Color
+    let textColor: Color
+    let backgroundColor: Color
 
-    public init(message: HUDMessage) {
+    public init(message: HUDMessage, tintColor: Color, textColor: Color, backgroundColor: Color) {
         self.message = message
+        self.tintColor = tintColor
+        self.textColor = textColor
+        self.backgroundColor = backgroundColor
     }
 
     public var body: some View {
         VStack(spacing: 10) {
             Text(message.title)
-                .foregroundColor(.primary.opacity(0.8))
+                .foregroundColor(textColor)
                 .multilineTextAlignment(.center)
                 .fontWeight(.medium)
 
             if let text = message.text {
                 Text(text)
-                    .foregroundColor(.primary.opacity(0.8))
+                    .foregroundColor(textColor)
                     .multilineTextAlignment(.center)
             }
 
@@ -55,12 +61,12 @@ public struct HUDMessageView: View {
                     Spacer()
                     if let onDismiss = message.onDismiss {
                         Button("Cancel", action: onDismiss)
-                            .buttonStyle(CapsuleButtonStyle(tintColor: .hudText))
+                            .buttonStyle(CapsuleButtonStyle(tintColor: tintColor))
                         Spacer()
                     }
                     if let onConfirm = message.onConfirm {
                         Button("OK", action: onConfirm)
-                            .buttonStyle(CapsuleFilledButtonStyle(tintColor: .hudText, textColor: .hudBackground))
+                            .buttonStyle(CapsuleFilledButtonStyle(tintColor: tintColor, textColor: backgroundColor.inverted(), backgroundColor: backgroundColor))
                         Spacer()
                     }
                 }

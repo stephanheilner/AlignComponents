@@ -37,6 +37,29 @@ public extension Color {
         )
     }
 
+//    func rgb() -> Int? {
+//        var fRed: CGFloat = 0
+//        var fGreen: CGFloat = 0
+//        var fBlue: CGFloat = 0
+//        var fAlpha: CGFloat = 0
+//
+//
+//
+//        if self.re(&fRed, green: &fGreen, blue: &fBlue, alpha: &fAlpha) {
+//            let iRed = Int(fRed * 255.0)
+//            let iGreen = Int(fGreen * 255.0)
+//            let iBlue = Int(fBlue * 255.0)
+//            let iAlpha = Int(fAlpha * 255.0)
+//
+//            //  (Bits 24-31 are alpha, 16-23 are red, 8-15 are green, 0-7 are blue).
+//            let rgb = (iAlpha << 24) + (iRed << 16) + (iGreen << 8) + iBlue
+//            return rgb
+//        } else {
+//            // Could not extract RGBA components:
+//            return nil
+//        }
+//    }
+
     // UIKit Colors
     static let systemBackground = Color(UIColor.systemBackground)
     static let secondarySystemBackground = Color(UIColor.secondarySystemBackground)
@@ -46,42 +69,56 @@ public extension Color {
     static let secondarySystemGroupedBackground = Color(UIColor.secondarySystemGroupedBackground)
     static let tertiarySystemGroupedBackground = Color(UIColor.tertiarySystemGroupedBackground)
 
-    static let lightGray = Color(0xF4F1EF)
-    static let darkGray = Color(0x737270)
+    func inverted() -> Color {
+        let uiColor = UIColor(self)
+        return Color(uiColor.inverted())
+    }
+}
 
-    static let hudBackground = Color.dynamicColor(lightGray, darkColor: darkGray)
-    static let hudText = Color.dynamicColor(darkGray, darkColor: lightGray)
+struct RGBA {
+    let red: CGFloat
+    let green: CGFloat
+    let blue: CGFloat
+    let alpha: CGFloat
 }
 
 public extension UIColor {
     static let accentColor = UIColor(named: "AccentColor") ?? UIColor(Color.accentColor)
 
-    func hexString(_ color: UIColor) -> String {
+    internal func rgba() -> RGBA {
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 0
+        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        return RGBA(red: red, green: green, blue: blue, alpha: alpha)
+    }
 
+    func hexString(_: UIColor) -> String {
         let multiplier = CGFloat(255.999999)
+        let rgba = rgba()
 
-        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-
-        if alpha == 1.0 {
+        if rgba.alpha == 1.0 {
             return String(
                 format: "%02lX%02lX%02lX",
-                Int(red * multiplier),
-                Int(green * multiplier),
-                Int(blue * multiplier)
+                Int(rgba.red * multiplier),
+                Int(rgba.green * multiplier),
+                Int(rgba.blue * multiplier)
             )
         }
 
         return String(
             format: "%02lX%02lX%02lX%02lX",
-            Int(red * multiplier),
-            Int(green * multiplier),
-            Int(blue * multiplier),
-            Int(alpha * multiplier)
+            Int(rgba.red * multiplier),
+            Int(rgba.green * multiplier),
+            Int(rgba.blue * multiplier),
+            Int(rgba.alpha * multiplier)
         )
+    }
+
+    func inverted() -> UIColor {
+        let rgba = rgba()
+        return UIColor(red: 255 - rgba.red, green: 255 - rgba.green, blue: 255 - rgba.blue, alpha: rgba.alpha)
     }
 
     static func dynamicColor(_ defaultColor: UIColor, darkColor: UIColor? = nil) -> UIColor {

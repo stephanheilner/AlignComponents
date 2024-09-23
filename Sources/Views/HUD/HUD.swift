@@ -31,11 +31,15 @@ public struct HUD<Content: View>: View {
     @Environment(\.dismissHUD) private var dismissHUD
     @Environment(\.presentationMode) private var presentationMode
 
+    private let tintColor: Color
+    private let textColor: Color
     private let backgroundColor: Color
     private let cornerRadius: CGFloat
     private let padding: CGFloat
 
-    public init(backgroundColor: Color = Color.dynamicColor(Color(0xF4F1EF), darkColor: Color(UIColor.systemGray4)), cornerRadius: CGFloat = 20, padding: CGFloat = 30, @ViewBuilder content: @escaping () -> Content) {
+    public init(tintColor: Color, textColor: Color, backgroundColor: Color, cornerRadius: CGFloat = 20, padding: CGFloat = 30, @ViewBuilder content: @escaping () -> Content) {
+        self.tintColor = tintColor
+        self.textColor = textColor
         self.backgroundColor = backgroundColor
         self.cornerRadius = cornerRadius
         self.padding = padding

@@ -26,15 +26,19 @@ import Foundation
 import SwiftUI
 
 public extension View {
-    func hud(hudMessage: Binding<HUDMessage?>, duration: TimeInterval = 3) -> some View {
-        modifier(HUDViewModifier(hudMessage: hudMessage, duration: duration))
+    func hud(hudMessage: Binding<HUDMessage?>, duration: TimeInterval = 3, tintColor: Color = .accentColor, textColor: Color = .primary, backgroundColor: Color = .tertiarySystemGroupedBackground) -> some View {
+        modifier(HUDViewModifier(hudMessage: hudMessage, duration: duration, tintColor: tintColor, textColor: textColor, backgroundColor: backgroundColor))
     }
 }
 
 public struct HUDViewModifier: ViewModifier {
     @Binding var hudMessage: HUDMessage?
-    let duration: TimeInterval
     @State private var workItem: DispatchWorkItem?
+
+    let duration: TimeInterval
+    let tintColor: Color
+    let textColor: Color
+    let backgroundColor: Color
 
     public func body(content: Content) -> some View {
         content
@@ -53,8 +57,8 @@ public struct HUDViewModifier: ViewModifier {
     @ViewBuilder
     func mainHUDView() -> some View {
         if let hudMessage {
-            HUD {
-                HUDMessageView(message: hudMessage)
+            HUD(tintColor: tintColor, textColor: textColor, backgroundColor: backgroundColor) {
+                HUDMessageView(message: hudMessage, tintColor: tintColor, textColor: textColor, backgroundColor: backgroundColor)
             }
         }
     }

@@ -27,13 +27,13 @@ import SwiftUI
 public struct CapsuleFilledButtonStyle: ButtonStyle {
     let tintColor: Color
     let textColor: Color
-    let borderColor: Color
+    let backgroundColor: Color
     var selected: Bool
 
-    public init(tintColor: Color = .accentColor, textColor: Color = .white, borderColor: Color? = nil, selected: Bool = false) {
+    public init(tintColor: Color = .accentColor, textColor: Color = .primary, backgroundColor: Color = Color.systemBackground, selected: Bool = false) {
         self.tintColor = tintColor
         self.textColor = textColor
-        self.borderColor = borderColor ?? textColor
+        self.backgroundColor = backgroundColor
         self.selected = selected
     }
 
@@ -43,11 +43,11 @@ public struct CapsuleFilledButtonStyle: ButtonStyle {
             .padding(.horizontal, 22)
             .padding(.vertical, 11)
             .foregroundColor(textColor)
-            .background(selected ? Color.white : (configuration.isPressed ? tintColor.opacity(0.6) : tintColor))
+            .background(selected ? textColor : (configuration.isPressed ? tintColor.opacity(0.6) : tintColor))
             .clipShape(Capsule())
             .scaleEffect(configuration.isPressed ? 0.9 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
-            .overlay(Capsule().stroke(borderColor, lineWidth: 1))
+            .overlay(Capsule().stroke(tintColor, lineWidth: 1))
     }
 }
 
