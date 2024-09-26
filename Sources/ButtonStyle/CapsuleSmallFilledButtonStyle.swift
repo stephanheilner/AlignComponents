@@ -41,7 +41,7 @@ public struct CapsuleSmallFilledButtonStyle: ButtonStyle {
             .padding(.horizontal, 11)
             .padding(.vertical, 5)
             .foregroundColor(textColor)
-            .background(selected ? Color.white : (configuration.isPressed ? tintColor.opacity(0.6) : tintColor))
+            .background(selected ? textColor : (configuration.isPressed ? tintColor.opacity(0.6) : tintColor))
             .clipShape(Capsule())
             .scaleEffect(configuration.isPressed ? 0.9 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)

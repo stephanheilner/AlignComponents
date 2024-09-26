@@ -66,7 +66,7 @@ public struct HUDMessageView: View {
                     }
                     if let onConfirm = message.onConfirm {
                         Button("OK", action: onConfirm)
-                            .buttonStyle(CapsuleFilledButtonStyle(tintColor: tintColor, textColor: backgroundColor.inverted(), backgroundColor: backgroundColor))
+                            .buttonStyle(CapsuleFilledButtonStyle(tintColor: tintColor, textColor: backgroundColor.inverted()))
                         Spacer()
                     }
                 }
@@ -76,4 +76,11 @@ public struct HUDMessageView: View {
     }
 }
 
-extension Color {}
+#Preview {
+    HUDMessageView(
+        message: HUDMessage(title: "Text", onDismiss: {}, onConfirm: {}),
+        tintColor: .accentColor,
+        textColor: .primary,
+        backgroundColor: Color.systemBackground
+    )
+}

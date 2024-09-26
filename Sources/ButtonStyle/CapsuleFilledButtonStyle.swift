@@ -27,13 +27,11 @@ import SwiftUI
 public struct CapsuleFilledButtonStyle: ButtonStyle {
     let tintColor: Color
     let textColor: Color
-    let backgroundColor: Color
     var selected: Bool
 
-    public init(tintColor: Color = .accentColor, textColor: Color = .primary, backgroundColor: Color = Color.systemBackground, selected: Bool = false) {
+    public init(tintColor: Color = .accentColor, textColor: Color = .white, selected: Bool = false) {
         self.tintColor = tintColor
         self.textColor = textColor
-        self.backgroundColor = backgroundColor
         self.selected = selected
     }
 

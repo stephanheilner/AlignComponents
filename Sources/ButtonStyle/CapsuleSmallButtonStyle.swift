@@ -25,10 +25,12 @@
 import SwiftUI
 
 public struct CapsuleSmallButtonStyle: ButtonStyle {
-    private let tintColor: Color
+    let tintColor: Color
+    var selected: Bool
 
-    public init(tintColor: Color = .accentColor) {
+    public init(tintColor: Color = .accentColor, selected: Bool = false) {
         self.tintColor = tintColor
+        self.selected = selected
     }
 
     public func makeBody(configuration: Configuration) -> some View {
@@ -36,7 +38,8 @@ public struct CapsuleSmallButtonStyle: ButtonStyle {
             .font(.subheadline)
             .padding(.horizontal, 11)
             .padding(.vertical, 5)
-            .foregroundColor(configuration.isPressed ? tintColor.opacity(0.6) : tintColor)
+            .foregroundColor(selected ? Color.white : (configuration.isPressed ? tintColor.opacity(0.6) : tintColor))
+            .background(Capsule().fill(selected ? tintColor : Color.clear))
             .overlay(
                 Capsule()
                     .stroke(configuration.isPressed ? tintColor.opacity(0.6) : tintColor, lineWidth: 1)
