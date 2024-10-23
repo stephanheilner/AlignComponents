@@ -29,19 +29,21 @@ public struct SingleChoiceOptionalView<Selectable: Identifiable & Hashable>: Vie
     let title: LocalizedStringKey
     let options: [Selectable]
     let optionToString: (Selectable) -> String
+    var optionImage: ((Selectable) -> Image?)?
     var selected: Binding<Selectable?>
     var showValueAsTitle: Bool = false
 
-    public init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Selectable?>, showValueAsTitle: Bool = false) {
+    public init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, optionImage: ((Selectable) -> Image?)? = nil, selected: Binding<Selectable?>, showValueAsTitle: Bool = false) {
         self.title = title
         self.options = options
         self.optionToString = optionToString
+        self.optionImage = optionImage
         self.selected = selected
         self.showValueAsTitle = showValueAsTitle
     }
 
-    public init(title: String, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Selectable?>, showValueAsTitle: Bool = false) {
-        self.init(title: LocalizedStringKey(title), options: options, optionToString: optionToString, selected: selected, showValueAsTitle: showValueAsTitle)
+    public init(title: String, options: [Selectable], optionToString: @escaping (Selectable) -> String, optionImage: ((Selectable) -> Image?)? = nil, selected: Binding<Selectable?>, showValueAsTitle: Bool = false) {
+        self.init(title: LocalizedStringKey(title), options: options, optionToString: optionToString, optionImage: optionImage, selected: selected, showValueAsTitle: showValueAsTitle)
     }
 
     private func text() -> Text {
@@ -75,7 +77,7 @@ public struct SingleChoiceOptionalView<Selectable: Identifiable & Hashable>: Vie
 
     @ViewBuilder
     private func selectionView() -> some View {
-        SingleChoiceSelectionView(title: title, options: options, optionToString: optionToString, selected: selected)
+        SingleChoiceSelectionView(title: title, options: options, optionToString: optionToString, optionImage: optionImage, selected: selected)
     }
 }
 
@@ -86,14 +88,16 @@ private struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: V
     let options: [Selectable]
     @State var filteredOptions: [Selectable]
     let optionToString: (Selectable) -> String
+    var optionImage: ((Selectable) -> Image?)?
     @Binding var selected: Selectable?
     @State var searchText: String = ""
 
-    init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Selectable?>) {
+    init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, optionImage: ((Selectable) -> Image?)? = nil, selected: Binding<Selectable?>) {
         self.title = title
         self.options = options
         filteredOptions = options
         self.optionToString = optionToString
+        self.optionImage = optionImage
         _selected = selected
     }
 
@@ -106,6 +110,10 @@ private struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: V
                     HStack {
                         Text(optionToString(selectable))
                             .foregroundColor(.primary)
+
+                        if let image = optionImage?(selectable) {
+                            image.padding(.leading, 10)
+                        }
 
                         Spacer()
 
