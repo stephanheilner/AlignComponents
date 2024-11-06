@@ -46,7 +46,7 @@ public struct HUDViewModifier: ViewModifier {
             .overlay(
                 ZStack {
                     mainHUDView()
-                        .offset(y: 32)
+                        .offset(y: -50)
                 }.animation(.spring(), value: hudMessage)
             )
             .onChange(of: hudMessage) { _ in
