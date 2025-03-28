@@ -22,31 +22,44 @@
 //  THE SOFTWARE.
 //
 
-import Foundation
 import SwiftUI
 
-public struct EmptyStateView<Content: View>: View {
-    @ViewBuilder let content: () -> Content
+struct CapsuleSegmentedControl<Item: Identifiable & Equatable>: View {
+    let items: [Item]
+    @Binding var selection: Item
+    let accentColor: Color
+    let title: (Item) -> String
+    let titleFont: Font = .footnote
 
-    public init(@ViewBuilder content: @escaping () -> Content) {
-        self.content = content
-    }
-
-    public var body: some View {
-        HStack {
-            Spacer()
-
-            VStack {
-                Spacer()
-
-                content()
-                    .padding(50)
-
-                Spacer()
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach(items) { item in
+                Button(action: {
+                    selection = item
+                }, label: {
+                    Text(title(item))
+                        .font(titleFont)
+                        .foregroundColor(selection == item ? .white : accentColor)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .background(selection == item ? accentColor : Color.clear)
+                })
+                .contentShape(Rectangle())
             }
-
-            Spacer()
+            .buttonStyle(.plain)
         }
-        .background(Color.systemGroupedBackground)
+        .background(Capsule().stroke(accentColor, lineWidth: 2))
+        .clipShape(Capsule())
     }
+}
+
+#Preview {
+    @Previewable @State var dayPeriod: DayPeriod = .pm
+    CapsuleSegmentedControl(
+        items: DayPeriod.allCases,
+        selection: $dayPeriod,
+        accentColor: Color.accentColor,
+        title: { $0.title }
+    )
+    .frame(width: 80)
 }

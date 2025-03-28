@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2024 Stephan Heilner
+//  Copyright © 2025 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -131,7 +131,7 @@ private struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: V
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: "Search"
         )
-        .onChange(of: searchText) { searchText in
+        .onChange(of: searchText) { _, searchText in
             if searchText.isBlank {
                 filteredOptions = options
             } else {

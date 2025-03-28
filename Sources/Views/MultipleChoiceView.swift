@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2024 Stephan Heilner
+//  Copyright © 2025 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -30,16 +30,18 @@ public struct MultipleChoiceView<Selectable: Identifiable & Hashable>: View {
     private let options: [Selectable]
     private let optionToString: (Selectable) -> String
     private var selected: Binding<Set<Selectable>>
+    private let allowSearch: Bool
 
-    public init(title: String, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Set<Selectable>>) {
-        self.init(title: LocalizedStringKey(title), options: options, optionToString: optionToString, selected: selected)
+    public init(title: String, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Set<Selectable>>, allowSearch: Bool = false) {
+        self.init(title: LocalizedStringKey(title), options: options, optionToString: optionToString, selected: selected, allowSearch: allowSearch)
     }
 
-    public init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Set<Selectable>>) {
+    public init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Set<Selectable>>, allowSearch: Bool = false) {
         self.title = title
         self.options = options
         self.optionToString = optionToString
         self.selected = selected
+        self.allowSearch = allowSearch
     }
 
     public var body: some View {
@@ -69,19 +71,31 @@ public struct MultipleChoiceView<Selectable: Identifiable & Hashable>: View {
 
     @ViewBuilder
     private func multiSelectionView() -> some View {
-        MultipleChoiceSelectionView(title: title, options: options, optionToString: optionToString, selected: selected)
+        MultipleChoiceSelectionView(title: title, options: options, optionToString: optionToString, selected: selected, allowSearch: allowSearch)
     }
 }
 
 struct MultipleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
     let title: LocalizedStringKey
     let options: [Selectable]
+    @State var filteredOptions: [Selectable]
     let optionToString: (Selectable) -> String
     @Binding var selected: Set<Selectable>
+    @State var allowSearch: Bool
+    @State var searchText: String = ""
+
+    init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, selected: Binding<Set<Selectable>>, allowSearch: Bool) {
+        self.title = title
+        self.options = options
+        filteredOptions = options
+        self.optionToString = optionToString
+        _selected = selected
+        _allowSearch = State(initialValue: allowSearch)
+    }
 
     var body: some View {
         List {
-            ForEach(options) { selectable in
+            ForEach(filteredOptions) { selectable in
                 Button(action: {
                     toggleSelection(selectable: selectable)
                 }) {
@@ -90,10 +104,9 @@ struct MultipleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
                             .foregroundColor(.primary)
                         Spacer()
 
-                        if selected.contains(where: { $0.id == selectable.id }) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.accentColor)
-                        }
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.accentColor)
+                            .opacity(selected.contains(where: { $0.id == selectable.id }) ? 1 : 0)
                     }
                 }
                 .tag(selectable.id)
@@ -101,6 +114,19 @@ struct MultipleChoiceSelectionView<Selectable: Identifiable & Hashable>: View {
         }
         .listStyle(GroupedListStyle())
         .navigationTitle(title)
+        .searchable(
+            text: $searchText,
+            isPresented: $allowSearch,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "Search"
+        )
+        .onChange(of: searchText) { _, searchText in
+            if searchText.isBlank {
+                filteredOptions = options
+            } else {
+                filteredOptions = options.filter { optionToString($0).uppercased().contains(searchText.uppercased()) }
+            }
+        }
     }
 
     private func toggleSelection(selectable: Selectable) {

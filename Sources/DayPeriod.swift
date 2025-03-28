@@ -22,27 +22,20 @@
 //  THE SOFTWARE.
 //
 
-import CoreMedia
 import Foundation
 
-public extension TimeInterval {
-    var time: CMTime { CMTimeMakeWithSeconds(self, preferredTimescale: Int32(kCMTimeMaxTimescale)) }
+enum DayPeriod: String, CaseIterable, Identifiable {
+    case am
+    case pm
 
-    func date() -> Date {
-        Date(timeIntervalSince1970: self)
+    var title: String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        return switch self {
+        case .am: formatter.amSymbol
+        case .pm: formatter.pmSymbol
+        }
     }
 
-    func toString(style: DateComponentsFormatter.UnitsStyle) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.hour, .minute, .second, .nanosecond]
-        formatter.unitsStyle = style
-        return formatter.string(from: self) ?? ""
-    }
-}
-
-public extension CMTime {
-    static let zeroSeconds = CMTime(seconds: 0, preferredTimescale: 1)
-    static let oneSecond = CMTime(seconds: 1, preferredTimescale: 1)
-
-    var timeInterval: TimeInterval { CMTimeGetSeconds(self) }
+    var id: String { rawValue }
 }

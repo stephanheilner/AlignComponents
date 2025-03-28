@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2024 Stephan Heilner
+//  Copyright © 2025 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -34,6 +34,7 @@ struct ContentView: View {
     @State var monthYear: Date?
     @State var year: Int?
     @State var time: TimeInterval?
+    @State var selectedTime: TimeInterval?
     @State var text: String = ""
     @State var password: String = ""
 
@@ -88,6 +89,8 @@ struct ContentView: View {
                     .buttonStyle(.plain)
                 FloatingLabelTextField("Title", text: $text)
                 FloatingLabelTextField("Password", text: $password, isSecure: true, error: $passwordError)
+
+                TimePicker("Time", selection: $selectedTime)
             }
 
             Section("Error") {

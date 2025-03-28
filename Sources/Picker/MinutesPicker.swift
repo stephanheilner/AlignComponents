@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2024 Stephan Heilner
+//  Copyright © 2025 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -72,7 +72,7 @@ public struct MinutesPicker: View {
         .sheet(isPresented: $isShowingPicker) {
             minutesPickerView()
         }
-        .onChange(of: minutes) { newValue in
+        .onChange(of: minutes) { _, newValue in
             if newValue != _selection.wrappedValue {
                 selection = newValue
             }

@@ -24,7 +24,7 @@
 
 import SwiftUI
 
-public struct HoursMinutesPicker: View {
+public struct TimePicker: View {
     private let title: LocalizedStringKey
     private let titleColor: Color
     private var debounce: Debounce<TimeInterval>?
@@ -32,8 +32,9 @@ public struct HoursMinutesPicker: View {
     @Binding var selection: TimeInterval?
     @Binding private var error: String?
 
-    @State private var hours: Int?
+    @State private var hour: Int?
     @State private var minutes: Int?
+    @State private var dayPeriod: DayPeriod = .am
 
     public init(_ title: LocalizedStringKey = "", selection: Binding<TimeInterval?>, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
         self.title = title
@@ -42,10 +43,19 @@ public struct HoursMinutesPicker: View {
         self.titleColor = titleColor
 
         if let seconds = selection.wrappedValue {
-            _hours = State(initialValue: Int(seconds / 3600))
+            let hour = Int(seconds / 3600)
+            let adjustedHour: Int
+            if hour > 12 {
+                adjustedHour = hour - 12
+                _dayPeriod = State(initialValue: .pm)
+            } else {
+                adjustedHour = hour
+                _dayPeriod = State(initialValue: .am)
+            }
+            _hour = State(initialValue: adjustedHour)
             _minutes = State(initialValue: Int((seconds.truncatingRemainder(dividingBy: 3600) / 60).rounded()))
         } else {
-            _hours = State(initialValue: -1)
+            _hour = State(initialValue: -1)
             _minutes = State(initialValue: -1)
         }
 
@@ -66,14 +76,26 @@ public struct HoursMinutesPicker: View {
             }
             HStack(alignment: .center, spacing: 2) {
                 HourPicker("Hour",
-                           selection: $hours,
+                           selection: $hour,
                            error: error != nil ? Binding.constant("") : Binding.constant(nil),
-                           titleColor: titleColor)
+                           titleColor: titleColor,
+                           hoursRange: 1 ... 12)
                 Text(":").padding(.top, 10)
                 MinutesPicker("Minutes",
                               selection: $minutes,
                               error: error != nil ? Binding.constant("") : Binding.constant(nil),
                               titleColor: titleColor)
+
+                CapsuleSegmentedControl(
+                    items: DayPeriod.allCases,
+                    selection: $dayPeriod,
+                    accentColor: Color.accentColor,
+                    title: { $0.title }
+                )
+                .frame(width: 80)
+                .padding(.top, 10)
+                .padding(.leading, 20)
+
                 Spacer()
             }
 
@@ -83,15 +105,28 @@ public struct HoursMinutesPicker: View {
                     .foregroundColor(.red)
             }
         }
-        .onChange(of: hours) { _, newValue in
+        .onChange(of: hour) { _, newValue in
             guard let newValue, newValue != -1, let minutes, minutes != -1 else { return }
-            let seconds = TimeInterval((newValue * 3600) + (minutes * 60))
+            let seconds = convertToSeconds(hour: newValue, minutes: minutes, dayPeriod: dayPeriod)
             debounce?.call(seconds)
         }
         .onChange(of: minutes) { _, newValue in
-            guard let hours, hours != -1, let newValue, newValue != -1 else { return }
-            let seconds = TimeInterval((hours * 3600) + (newValue * 60))
+            guard let hour, hour != -1, let newValue, newValue != -1 else { return }
+            let seconds = convertToSeconds(hour: hour, minutes: newValue, dayPeriod: dayPeriod)
             debounce?.call(seconds)
         }
+        .onChange(of: dayPeriod) { _, newValue in
+            guard let hour, hour != -1, let minutes, minutes != -1 else { return }
+            let seconds = convertToSeconds(hour: hour, minutes: minutes, dayPeriod: newValue)
+            debounce?.call(seconds)
+        }
+    }
+
+    private func convertToSeconds(hour: Int, minutes: Int, dayPeriod: DayPeriod) -> TimeInterval {
+        let hoursAdjusted = switch dayPeriod {
+        case .am: hour
+        case .pm: hour + 12
+        }
+        return TimeInterval((hoursAdjusted * 3600) + (minutes * 60))
     }
 }

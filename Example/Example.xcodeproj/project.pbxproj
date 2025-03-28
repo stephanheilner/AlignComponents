@@ -20,7 +20,6 @@
 		D496BB572B081080003E19C2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D496BB592B081081003E19C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D496BB5C2B081081003E19C2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		D496BB632B0815E0003E19C2 /* AlignComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AlignComponents; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,7 +38,6 @@
 			isa = PBXGroup;
 			children = (
 				D496BB542B081080003E19C2 /* Example */,
-				D496BB632B0815E0003E19C2 /* AlignComponents */,
 				D496BB532B081080003E19C2 /* Products */,
 			);
 			sourceTree = "<group>";

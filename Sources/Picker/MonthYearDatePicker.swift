@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2024 Stephan Heilner
+//  Copyright © 2025 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -85,12 +85,12 @@ public struct MonthYearDatePicker: View {
                     .foregroundColor(.red)
             }
         }
-        .onChange(of: month) { newValue in
+        .onChange(of: month) { _, newValue in
             guard newValue != -1, year != -1 else { return }
             let date = (_selection.wrappedValue ?? Date()).setting(month: newValue, day: 1, year: year)
             debounce?.call(date)
         }
-        .onChange(of: year) { newValue in
+        .onChange(of: year) { _, newValue in
             guard month != -1, newValue != -1 else { return }
             let date = (_selection.wrappedValue ?? Date()).setting(month: month, day: 1, year: newValue)
             debounce?.call(date)

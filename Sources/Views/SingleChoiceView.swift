@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2024 Stephan Heilner
+//  Copyright © 2025 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -28,22 +28,24 @@ import SwiftUI
 public struct SingleChoiceView<Selectable: Identifiable & Hashable>: View {
     let title: LocalizedStringKey
     let options: [Selectable]
+    let allowSearch: Bool
     let optionToString: (Selectable) -> String
     var optionImage: ((Selectable) -> Image?)?
     var selected: Binding<Selectable>
     var showValueAsTitle: Bool = false
 
-    public init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, optionImage: ((Selectable) -> Image?)? = nil, selected: Binding<Selectable>, showValueAsTitle: Bool = false) {
+    public init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, optionImage: ((Selectable) -> Image?)? = nil, selected: Binding<Selectable>, allowSearch: Bool = false, showValueAsTitle: Bool = false) {
         self.title = title
         self.options = options
         self.optionToString = optionToString
         self.optionImage = optionImage
         self.selected = selected
         self.showValueAsTitle = showValueAsTitle
+        self.allowSearch = allowSearch
     }
 
-    public init(title: String, options: [Selectable], optionToString: @escaping (Selectable) -> String, optionImage: ((Selectable) -> Image?)? = nil, selected: Binding<Selectable>, showValueAsTitle: Bool = false) {
-        self.init(title: LocalizedStringKey(title), options: options, optionToString: optionToString, optionImage: optionImage, selected: selected, showValueAsTitle: showValueAsTitle)
+    public init(title: String, options: [Selectable], optionToString: @escaping (Selectable) -> String, optionImage: ((Selectable) -> Image?)? = nil, selected: Binding<Selectable>, allowSearch: Bool = false, showValueAsTitle: Bool = false) {
+        self.init(title: LocalizedStringKey(title), options: options, optionToString: optionToString, optionImage: optionImage, selected: selected, allowSearch: allowSearch, showValueAsTitle: showValueAsTitle)
     }
 
     public var body: some View {
@@ -71,7 +73,7 @@ public struct SingleChoiceView<Selectable: Identifiable & Hashable>: View {
 
     @ViewBuilder
     private func selectionView() -> some View {
-        SingleChoiceSelectionView(title: title, options: options, optionToString: optionToString, selected: selected)
+        SingleChoiceSelectionView(title: title, options: options, optionToString: optionToString, selected: selected, allowSearch: allowSearch)
     }
 }
 
@@ -84,15 +86,17 @@ private struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: V
     let optionToString: (Selectable) -> String
     var optionImage: ((Selectable) -> Image?)?
     @Binding var selected: Selectable
+    @State var allowSearch: Bool
     @State var searchText: String = ""
 
-    init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, optionImage: ((Selectable) -> Image?)? = nil, selected: Binding<Selectable>) {
+    init(title: LocalizedStringKey, options: [Selectable], optionToString: @escaping (Selectable) -> String, optionImage: ((Selectable) -> Image?)? = nil, selected: Binding<Selectable>, allowSearch: Bool) {
         self.title = title
         self.options = options
         filteredOptions = options
         self.optionToString = optionToString
         self.optionImage = optionImage
         _selected = selected
+        _allowSearch = State(initialValue: allowSearch)
     }
 
     var body: some View {
@@ -122,10 +126,11 @@ private struct SingleChoiceSelectionView<Selectable: Identifiable & Hashable>: V
         }
         .searchable(
             text: $searchText,
+            isPresented: $allowSearch,
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: "Search"
         )
-        .onChange(of: searchText) { searchText in
+        .onChange(of: searchText) { _, searchText in
             if searchText.isBlank {
                 filteredOptions = options
             } else {

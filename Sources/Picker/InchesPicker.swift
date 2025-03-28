@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2024 Stephan Heilner
+//  Copyright © 2025 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -61,7 +61,7 @@ public struct InchesPicker: View {
         .sheet(isPresented: $isShowingPicker) {
             inchPickerView()
         }
-        .onChange(of: inches) { newValue in
+        .onChange(of: inches) { _, newValue in
             if newValue != _selection.wrappedValue {
                 selection = newValue
             }

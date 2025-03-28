@@ -1,7 +1,7 @@
 //
 //  The MIT License (MIT)
 //
-//  Copyright © 2024 Stephan Heilner
+//  Copyright © 2025 Stephan Heilner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the  Software), to deal
@@ -28,6 +28,7 @@ import SwiftUI
 public struct HourPicker: View {
     private let titleKey: LocalizedStringKey
     private let titleColor: Color
+    private let hoursRange: ClosedRange<Int>
 
     @Binding private var selection: Int?
     @Binding private var error: String?
@@ -35,11 +36,12 @@ public struct HourPicker: View {
     @State private var isShowingPicker: Bool = false
     @State private var hours: Int
 
-    public init(_ titleKey: LocalizedStringKey, selection: Binding<Int?>, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
+    public init(_ titleKey: LocalizedStringKey, selection: Binding<Int?>, error: Binding<String?>? = nil, titleColor: Color = .secondary, hoursRange: ClosedRange<Int> = (0 ... 48)) {
         self.titleKey = titleKey
         _selection = selection
         _error = error ?? Binding.constant(nil)
         self.titleColor = titleColor
+        self.hoursRange = hoursRange
 
         if let hour = selection.wrappedValue {
             _hours = State(initialValue: hour)
@@ -57,7 +59,7 @@ public struct HourPicker: View {
             Button(action: {
                 isShowingPicker.toggle()
             }, label: {
-                let title = (hours == -1 ? "--" : String(format: "%02d", hours)) + " "
+                let title = (hours == -1 ? "--" : String(format: "%d", hours)) + " "
                 Text(title) + Text(Image(systemName: "chevron.up.chevron.down"))
             })
             .buttonStyle(.plain)
@@ -72,7 +74,7 @@ public struct HourPicker: View {
         .sheet(isPresented: $isShowingPicker) {
             hourPickerView()
         }
-        .onChange(of: hours) { newValue in
+        .onChange(of: hours) { _, newValue in
             if newValue != _selection.wrappedValue {
                 selection = newValue
             }
@@ -97,8 +99,8 @@ public struct HourPicker: View {
 //            LazyVGrid(columns: [.init(.adaptive(minimum: 45, maximum: 50), alignment: .top)]) {
 
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
-                ForEach(0 ... 48, id: \.self) { hour in
-                    Button(String(format: "%02d", hour)) {
+                ForEach(hoursRange, id: \.self) { hour in
+                    Button(String(format: "%d", hour)) {
                         hours = hour
                         isShowingPicker = false
                     }
