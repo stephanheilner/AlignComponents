@@ -55,7 +55,7 @@ struct ContentView: View {
         List {
             Section("Pickers") {
                 MonthPicker("Month", selection: $month)
-                DayPicker("Day", selection: $day, month: Date().month)
+                DayPicker("Day", selection: $day, month: month, year: year)
                 YearPicker("Year", selection: $year)
                 HourPicker("Hours", selection: $hours)
                 MinutesPicker("Minutes", selection: $minutes)
@@ -79,7 +79,7 @@ struct ContentView: View {
 
             Section("Error") {
                 MonthPicker("Month", selection: $month, error: $monthError)
-                DayPicker("Day", selection: $day, month: Date().month, error: $dayError)
+                DayPicker("Day", selection: $day, month: month, year: year, error: $dayError)
                 YearPicker("Year", selection: $year, error: $yearError)
 
                 HourPicker("Hours", selection: $hours, error: $hoursError)

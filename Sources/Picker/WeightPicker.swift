@@ -69,7 +69,7 @@ public struct WeightPicker: View {
 
     @ViewBuilder
     func weightPickerView() -> some View {
-        ScrollView {
+        VStack(spacing: 20) {
             ZStack(alignment: .topLeading) {
                 HStack(alignment: .top) {
                     cancelButton()
@@ -82,13 +82,16 @@ public struct WeightPicker: View {
                     Spacer()
                 }
             }
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
-                ForEach(60 ... 700, id: \.self) { lbs in
-                    Button(String(format: "%02d", lbs)) {
-                        weight = lbs
-                        isShowingPicker = false
+
+            ScrollView(.vertical) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
+                    ForEach(60 ... 700, id: \.self) { lbs in
+                        Button(String(format: "%02d", lbs)) {
+                            weight = lbs
+                            isShowingPicker = false
+                        }
+                        .buttonStyle(.picker(selected: weight == lbs))
                     }
-                    .buttonStyle(.picker(selected: weight == lbs))
                 }
             }
         }
@@ -102,5 +105,6 @@ public struct WeightPicker: View {
             isShowingPicker = false
         }
         .buttonStyle(.plain)
+        .foregroundColor(.accentColor)
     }
 }

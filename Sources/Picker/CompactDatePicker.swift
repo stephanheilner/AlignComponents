@@ -31,9 +31,9 @@ public struct CompactDatePicker: View {
     private var debounce: Debounce<Date>?
     private let yearRange: ClosedRange<Int>
 
-    @State private var month: Int
-    @State private var day: Int
-    @State private var year: Int
+    @State private var selectedMonth: Int
+    @State private var selectedDay: Int
+    @State private var selectedYear: Int
 
     @State private var isShowingMonthPicker: Bool = false
     @State private var isShowingDayPicker: Bool = false
@@ -55,13 +55,13 @@ public struct CompactDatePicker: View {
         }
 
         if let selectedDate = selection.wrappedValue {
-            _month = State(initialValue: selectedDate.month)
-            _day = State(initialValue: selectedDate.day)
-            _year = State(initialValue: selectedDate.year)
+            _selectedMonth = State(initialValue: selectedDate.month)
+            _selectedDay = State(initialValue: selectedDate.day)
+            _selectedYear = State(initialValue: selectedDate.year)
         } else {
-            _month = State(initialValue: -1)
-            _day = State(initialValue: -1)
-            _year = State(initialValue: -1)
+            _selectedMonth = State(initialValue: -1)
+            _selectedDay = State(initialValue: -1)
+            _selectedYear = State(initialValue: -1)
         }
 
         debounce = Debounce<Date>(0.3) { [self] date in
@@ -84,36 +84,30 @@ public struct CompactDatePicker: View {
                 Button {
                     isShowingMonthPicker = true
                 } label: {
-                    if month != -1 {
-                        Text(String(month))
-                            .foregroundColor(.primary)
+                    if selectedMonth != -1 {
+                        Text(String(selectedMonth))
                     } else {
                         Text("Month")
-                            .foregroundColor(.accentColor)
                     }
                 }
                 Text("/").foregroundColor(.secondary)
                 Button {
                     isShowingDayPicker = true
                 } label: {
-                    if day != -1 {
-                        Text(String(day))
-                            .foregroundColor(.primary)
+                    if selectedDay != -1 {
+                        Text(String(selectedDay))
                     } else {
                         Text("Day")
-                            .foregroundColor(.accentColor)
                     }
                 }
                 Text("/").foregroundColor(.secondary)
                 Button {
                     isShowingYearPicker = true
                 } label: {
-                    if year != -1 {
-                        Text(String(year))
-                            .foregroundColor(.primary)
+                    if selectedYear != -1 {
+                        Text(String(selectedYear))
                     } else {
                         Text("Year")
-                            .foregroundColor(.accentColor)
                     }
                 }
             }
@@ -124,39 +118,29 @@ public struct CompactDatePicker: View {
                     .foregroundColor(.red)
             }
         }
-        .onChange(of: month) { _, newValue in
-            guard day != -1, newValue != -1, year != -1 else { return }
-            let date = (_selection.wrappedValue ?? Date()).setting(month: newValue, day: day, year: year)
+        .onChange(of: selectedMonth) { _, newValue in
+            guard selectedDay != -1, newValue != -1, selectedYear != -1 else { return }
+            let date = (_selection.wrappedValue ?? Date()).setting(month: newValue, day: selectedDay, year: selectedYear)
             debounce?.call(date)
         }
-        .onChange(of: day) { _, newValue in
-            guard newValue != -1, month != -1, year != -1 else { return }
-            let date = (_selection.wrappedValue ?? Date()).setting(month: month, day: newValue, year: year)
+        .onChange(of: selectedDay) { _, newValue in
+            guard newValue != -1, selectedMonth != -1, selectedYear != -1 else { return }
+            let date = (_selection.wrappedValue ?? Date()).setting(month: selectedMonth, day: newValue, year: selectedYear)
             debounce?.call(date)
         }
-        .onChange(of: year) { _, newValue in
-            guard day != -1, month != -1, newValue != -1 else { return }
-            let date = (_selection.wrappedValue ?? Date()).setting(month: month, day: day, year: newValue)
+        .onChange(of: selectedYear) { _, newValue in
+            guard selectedDay != -1, selectedMonth != -1, newValue != -1 else { return }
+            let date = (_selection.wrappedValue ?? Date()).setting(month: selectedMonth, day: selectedDay, year: newValue)
             debounce?.call(date)
         }
         .sheet(isPresented: $isShowingMonthPicker) {
-            MonthPickerView(title: "Month", month: $month, showMonthNumber: true)
+            MonthPickerView(title: "Month", month: $selectedMonth, showMonthNumber: true)
         }
         .sheet(isPresented: $isShowingDayPicker) {
-            DayPickerView(title: "Day", month: month, day: $day)
+            DayPickerView(month: selectedMonth, year: selectedYear, selection: $selectedDay)
         }
         .sheet(isPresented: $isShowingYearPicker) {
-            YearPickerView(title: "Year", year: $year)
+            YearPickerView(title: "Year", year: $selectedYear, range: yearRange)
         }
-    }
-
-    @ViewBuilder
-    func cancelButton() -> some View {
-        Button("Cancel") {
-            isShowingMonthPicker = false
-            isShowingDayPicker = false
-            isShowingYearPicker = false
-        }
-        .buttonStyle(.plain)
     }
 }

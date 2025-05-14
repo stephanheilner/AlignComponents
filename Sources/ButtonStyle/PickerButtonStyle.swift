@@ -24,25 +24,46 @@
 
 import SwiftUI
 
+public enum PickerState {
+    case active
+    case selected
+    case disabled
+
+    func backgroundColor(_ defaultColor: Color) -> Color {
+        switch self {
+        case .active, .disabled: defaultColor
+        case .selected: .accentColor
+        }
+    }
+
+    func foregroundColor(_ defaultColor: Color) -> Color {
+        switch self {
+        case .active: defaultColor
+        case .selected: .white
+        case .disabled: Color(UIColor.placeholderText)
+        }
+    }
+}
+
 public struct PickerButtonStyle: ButtonStyle {
     let tintColor: Color
     let foregroundColor: Color
-    let selected: Bool
+    let pickerState: PickerState
 
-    public init(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary, selected: Bool = false) {
+    public init(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary, pickerState: PickerState = .active) {
         self.tintColor = tintColor
         self.foregroundColor = foregroundColor
-        self.selected = selected
+        self.pickerState = pickerState
     }
 
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .frame(maxWidth: .infinity, minHeight: 44, maxHeight: .infinity)
             .padding(3)
-            .background(configuration.isPressed ? (selected ? Color.accentColor : tintColor).opacity(0.6) : (selected ? Color.accentColor : tintColor))
-            .foregroundColor(selected ? Color.white : foregroundColor)
+            .background(configuration.isPressed ? pickerState.backgroundColor(tintColor).opacity(0.6) : pickerState.backgroundColor(tintColor))
+            .foregroundColor(pickerState.foregroundColor(foregroundColor))
             .cornerRadius(6)
-            .overlay(RoundedRectangle(cornerRadius: 6).stroke(foregroundColor.opacity(0.5), lineWidth: 0.5))
+            .overlay(RoundedRectangle(cornerRadius: 6).stroke(pickerState.foregroundColor(foregroundColor).opacity(0.5), lineWidth: 0.5))
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
     }
@@ -50,8 +71,12 @@ public struct PickerButtonStyle: ButtonStyle {
 
 public extension ButtonStyle where Self == PickerButtonStyle {
     static var picker: PickerButtonStyle { picker() }
-    static func picker(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary, selected: Bool = false) -> PickerButtonStyle {
-        PickerButtonStyle(tintColor: tintColor, foregroundColor: foregroundColor, selected: selected)
+    static func picker(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary, pickerState: PickerState = .active) -> PickerButtonStyle {
+        PickerButtonStyle(tintColor: tintColor, foregroundColor: foregroundColor, pickerState: pickerState)
+    }
+
+    static func picker(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary, selected: Bool) -> PickerButtonStyle {
+        PickerButtonStyle(tintColor: tintColor, foregroundColor: foregroundColor, pickerState: selected ? .selected : .active)
     }
 }
 

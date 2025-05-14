@@ -81,22 +81,22 @@ public struct MinutesPicker: View {
 
     @ViewBuilder
     func minutesPickerView() -> some View {
-        ScrollView(.vertical) {
-            VStack(alignment: .leading, spacing: 20) {
-                ZStack(alignment: .topLeading) {
-                    HStack(alignment: .top) {
-                        cancelButton()
-                        Spacer()
-                    }
-                    HStack(alignment: .top) {
-                        Spacer()
-                        Text(titleKey)
-                            .font(.body)
-                            .fontWeight(.bold)
-                        Spacer()
-                    }
+        VStack(spacing: 20) {
+            ZStack(alignment: .topLeading) {
+                HStack(alignment: .top) {
+                    cancelButton()
+                    Spacer()
                 }
+                HStack(alignment: .top) {
+                    Spacer()
+                    Text(titleKey)
+                        .font(.body)
+                        .fontWeight(.bold)
+                    Spacer()
+                }
+            }
 
+            ScrollView(.vertical) {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
                     ForEach(0 ... 59, id: \.self) { minutes in
                         Button(String(format: "%02d", minutes)) {
@@ -107,8 +107,8 @@ public struct MinutesPicker: View {
                     }
                 }
             }
-            .padding(20)
         }
+        .padding(20)
         .background(Color(UIColor.systemBackground))
     }
 
@@ -118,5 +118,6 @@ public struct MinutesPicker: View {
             isShowingPicker = false
         }
         .buttonStyle(.plain)
+        .foregroundColor(.accentColor)
     }
 }

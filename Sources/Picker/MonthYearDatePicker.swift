@@ -25,7 +25,7 @@
 import SwiftUI
 
 public struct MonthYearDatePicker: View {
-    private let title: LocalizedStringKey
+    private let title: LocalizedStringKey?
     private let titleColor: Color
 
     @Binding private var selection: Date?
@@ -37,7 +37,7 @@ public struct MonthYearDatePicker: View {
     @State private var month: Int?
     @State private var year: Int?
 
-    public init(_ title: LocalizedStringKey = "", selection: Binding<Date?>, isFuture: Bool = false, upToYear: Int = Date().year + 10, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
+    public init(_ title: LocalizedStringKey? = nil, selection: Binding<Date?>, isFuture: Bool = false, upToYear: Int = Date().year + 10, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
         self.title = title
         _selection = selection
         _error = error ?? Binding.constant(nil)
@@ -66,7 +66,7 @@ public struct MonthYearDatePicker: View {
 
     public var body: some View {
         VStack(alignment: .leading) {
-            if title != "" {
+            if let title {
                 Text(title)
                     .font(.caption)
                     .padding(.bottom, 5)

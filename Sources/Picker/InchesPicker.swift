@@ -95,8 +95,8 @@ public struct InchesPicker: View {
                     }
                 }
             }
-            .padding(20)
         }
+        .padding(20)
         .background(Color(UIColor.systemBackground))
     }
 
@@ -106,5 +106,6 @@ public struct InchesPicker: View {
             isShowingPicker = false
         }
         .buttonStyle(.plain)
+        .foregroundColor(.accentColor)
     }
 }

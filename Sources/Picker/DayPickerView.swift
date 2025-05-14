@@ -25,40 +25,91 @@
 import SwiftUI
 
 public struct DayPickerView: View {
-    var title: LocalizedStringKey
-    var month: Int?
-    @Binding var day: Int
+    private let calendar: Calendar
+    private let title: LocalizedStringKey
+    private var month: Int
+    private var year: Int
+    @Binding private var selectedDay: Int
+
     @Environment(\.dismiss) private var dismiss
 
-    public var body: some View {
-        ScrollView(.vertical) {
-            VStack(alignment: .leading, spacing: 20) {
-                ZStack(alignment: .topLeading) {
-                    HStack(alignment: .top) {
-                        cancelButton()
-                        Spacer()
-                    }
-                    HStack(alignment: .top) {
-                        Spacer()
-                        Text(title)
-                            .font(.body)
-                            .fontWeight(.bold)
-                        Spacer()
-                    }
-                }
+    public init(_ titleKey: LocalizedStringKey? = nil, month: Int? = nil, year: Int? = nil, selection: Binding<Int>, file _: String = #file, line _: Int = #line) {
+        let calendar = Calendar.autoupdatingCurrent
 
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
-                    ForEach(1 ... Date().endOfMonth(month: month).day, id: \.self) { day in
+        self.calendar = calendar
+        _selectedDay = selection
+        self.month = month ?? Date().month
+        self.year = year ?? Date().year
+        title = titleKey ?? LocalizedStringKey(calendar.monthSymbols[(month ?? Date().month) - 1])
+    }
+
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            ZStack(alignment: .topLeading) {
+                HStack(alignment: .top) {
+                    cancelButton()
+                    Spacer()
+                }
+                HStack(alignment: .top) {
+                    Spacer()
+                    Text(title)
+                        .font(.body)
+                        .fontWeight(.bold)
+                    Spacer()
+                }
+            }
+
+            let daysInMonth = Date().endOfMonth(month: month).day
+            let firstOfMonth = calendar.date(from: DateComponents(year: year, month: month, day: 1))!
+            let firstWeekday = calendar.component(.weekday, from: firstOfMonth) - 1
+
+            // Previous month trailing days
+            let previousMonthDate = calendar.date(byAdding: .month, value: -1, to: firstOfMonth)!
+            let previousMonthRange = calendar.range(of: .day, in: .month, for: previousMonthDate)!
+            let daysInPreviousMonth = previousMonthRange.upperBound - previousMonthRange.lowerBound
+
+            // Calculate remaining cells needed to complete the grid
+            let totalCells = firstWeekday + daysInMonth
+            let remainingCells = (7 - (totalCells % 7)) % 7
+
+            ScrollView(.vertical) {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 10) {
+                    // Days of week header
+                    ForEach(calendar.shortWeekdaySymbols, id: \.self) { day in
+                        Text(day)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    if firstWeekday > 0 {
+                        ForEach((daysInPreviousMonth - firstWeekday + 1) ... daysInPreviousMonth, id: \.self) { day in
+                            Button(String(day)) {}
+                                .disabled(true)
+                        }
+                    }
+
+                    // Current month days
+
+                    ForEach(1 ... daysInMonth, id: \.self) { day in
+                        let pickerState: PickerState = selectedDay == day ? .selected : .active
                         Button(String(day)) {
-                            self.day = day
+                            selectedDay = day
                             dismiss()
                         }
-                        .buttonStyle(.picker(selected: self.day == day))
+                        .buttonStyle(PickerButtonStyle(pickerState: pickerState))
+                    }
+
+                    // Next month leading days
+                    if remainingCells > 0 {
+                        ForEach(1 ... remainingCells, id: \.self) { day in
+                            Button(String(day)) {}
+                                .disabled(true)
+                        }
                     }
                 }
             }
-            .padding(20)
         }
+        .padding(20)
         .background(Color(UIColor.systemBackground))
     }
 
@@ -68,5 +119,6 @@ public struct DayPickerView: View {
             dismiss()
         }
         .foregroundColor(.accentColor)
+        .buttonStyle(.plain)
     }
 }

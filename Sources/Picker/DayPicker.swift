@@ -28,25 +28,27 @@ import SwiftUI
 public struct DayPicker: View {
     private let titleKey: LocalizedStringKey
     private let titleColor: Color
-    private var month: Int?
 
     @Binding private var selection: Int?
     @Binding private var error: String?
 
     @State private var isShowingPicker: Bool = false
-    @State private var day: Int
+    @State private var selectedDay: Int
+    private var month: Int
+    private var year: Int
 
-    public init(_ titleKey: LocalizedStringKey, selection: Binding<Int?>, month: Int?, error: Binding<String?>? = nil, titleColor: Color = .secondary) {
+    public init(_ titleKey: LocalizedStringKey, selection: Binding<Int?>, month: Int? = nil, year: Int? = nil, error: Binding<String?>? = nil, titleColor: Color = .secondary, file _: String = #file, line _: Int = #line) {
         self.titleKey = titleKey
         _selection = selection
+        self.month = month ?? Date().month
+        self.year = year ?? Date().year
         _error = error ?? Binding.constant(nil)
-        self.month = month
         self.titleColor = titleColor
 
         if let day = selection.wrappedValue {
-            _day = State(initialValue: day)
+            _selectedDay = State(initialValue: day)
         } else {
-            _day = State(initialValue: -1)
+            _selectedDay = State(initialValue: -1)
         }
     }
 
@@ -59,7 +61,7 @@ public struct DayPicker: View {
             Button(action: {
                 isShowingPicker.toggle()
             }, label: {
-                let title = (day == -1 ? "--" : String(day)) + " "
+                let title = (selectedDay == -1 ? "--" : String(selectedDay)) + " "
                 Text(title) + Text(Image(systemName: "chevron.up.chevron.down"))
             })
             .buttonStyle(.plain)
@@ -72,9 +74,9 @@ public struct DayPicker: View {
             }
         }
         .sheet(isPresented: $isShowingPicker) {
-            DayPickerView(title: titleKey, month: month, day: $day)
+            DayPickerView(month: month, year: year, selection: $selectedDay)
         }
-        .onChange(of: day) { _, newValue in
+        .onChange(of: selectedDay) { _, newValue in
             if newValue != _selection.wrappedValue {
                 selection = newValue
             }

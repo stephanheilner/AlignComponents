@@ -79,7 +79,7 @@ public struct MonthDayYearDatePicker: View {
             HStack(alignment: .center, spacing: 20) {
                 YearPicker("Year", selection: $year, range: yearRange, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
                 MonthPicker("Month", selection: $month, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
-                DayPicker("Day", selection: $day, month: month, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
+                DayPicker("Day", selection: $day, month: month, year: year, error: error != nil ? Binding.constant("") : Binding.constant(nil), titleColor: titleColor)
 
                 Spacer()
             }
