@@ -88,7 +88,7 @@ public struct WeightPicker: View {
                         weight = lbs
                         isShowingPicker = false
                     }
-                    .buttonStyle(PickerButtonStyle())
+                    .buttonStyle(.picker(selected: weight == lbs))
                 }
             }
         }

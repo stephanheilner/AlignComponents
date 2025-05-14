@@ -70,7 +70,7 @@ public struct FeetPicker: View {
 
     @ViewBuilder
     func footPickerView() -> some View {
-        ScrollView {
+        VStack(alignment: .leading, spacing: 20) {
             ZStack(alignment: .topLeading) {
                 HStack(alignment: .top) {
                     cancelButton()
@@ -79,21 +79,24 @@ public struct FeetPicker: View {
                 HStack(alignment: .top) {
                     Spacer()
                     Text(titleKey)
-                        .font(.title2)
+                        .font(.body)
+                        .fontWeight(.bold)
                     Spacer()
                 }
             }
+
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
                 ForEach(2 ... 9, id: \.self) { foot in
                     Button(String(format: "%02d", foot)) {
                         feet = foot
                         isShowingPicker = false
                     }
-                    .buttonStyle(PickerButtonStyle())
+                    .buttonStyle(.picker(selected: feet == foot))
                 }
             }
+
+            .padding(20)
         }
-        .padding(20)
         .background(Color(UIColor.systemBackground))
     }
 

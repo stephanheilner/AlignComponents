@@ -22,54 +22,15 @@
 //  THE SOFTWARE.
 //
 
-import Foundation
 import SwiftUI
 
-public struct InchesPicker: View {
-    private let titleKey: LocalizedStringKey
-
-    @Binding private var selection: Int?
-    @State private var isShowingPicker: Bool = false
-    @State private var inches: Int
-
-    public init(_ titleKey: LocalizedStringKey, selection: Binding<Int?>) {
-        self.titleKey = titleKey
-        _selection = selection
-
-        if let inch = selection.wrappedValue {
-            _inches = State(initialValue: inch)
-        } else {
-            _inches = State(initialValue: -1)
-        }
-    }
+public struct MonthPickerView: View {
+    var title: LocalizedStringKey
+    @Binding var month: Int
+    var showMonthNumber: Bool = false
+    @Environment(\.dismiss) private var dismiss
 
     public var body: some View {
-        VStack(alignment: .leading) {
-            Text(titleKey)
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            Button(action: {
-                isShowingPicker.toggle()
-            }, label: {
-                let title = (inches == -1 ? "--" : String(format: "%02d", inches)) + " "
-                Text(title) + Text(Image(systemName: "chevron.up.chevron.down"))
-            })
-            .buttonStyle(.plain)
-            .foregroundColor(.accentColor)
-        }
-        .sheet(isPresented: $isShowingPicker) {
-            inchPickerView()
-        }
-        .onChange(of: inches) { _, newValue in
-            if newValue != _selection.wrappedValue {
-                selection = newValue
-            }
-        }
-    }
-
-    @ViewBuilder
-    func inchPickerView() -> some View {
         ScrollView(.vertical) {
             VStack(alignment: .leading, spacing: 20) {
                 ZStack(alignment: .topLeading) {
@@ -79,19 +40,30 @@ public struct InchesPicker: View {
                     }
                     HStack(alignment: .top) {
                         Spacer()
-                        Text(titleKey)
+                        Text(title)
                             .font(.body)
                             .fontWeight(.bold)
                         Spacer()
                     }
                 }
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
-                    ForEach(0 ... 11, id: \.self) { inch in
-                        Button(String(format: "%02d", inch)) {
-                            inches = inch
-                            isShowingPicker = false
-                        }
-                        .buttonStyle(.picker(selected: inches == inch))
+
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 10) {
+                    ForEach(1 ... Calendar.current.monthSymbols.count, id: \.self) { month in
+                        Button(action: {
+                            self.month = month
+                            dismiss()
+                        }, label: {
+                            if showMonthNumber {
+                                Text("\(Calendar.current.shortMonthSymbols[month - 1])\u{00A0}(\(month))")
+                                    .minimumScaleFactor(0.7)
+                                    .lineLimit(1)
+                            } else {
+                                Text(Calendar.current.monthSymbols[month - 1])
+                                    .minimumScaleFactor(0.7)
+                                    .lineLimit(1)
+                            }
+                        })
+                        .buttonStyle(.picker(selected: self.month == month))
                     }
                 }
             }
@@ -103,8 +75,8 @@ public struct InchesPicker: View {
     @ViewBuilder
     func cancelButton() -> some View {
         Button("Cancel") {
-            isShowingPicker = false
+            dismiss()
         }
-        .buttonStyle(.plain)
+        .foregroundColor(.accentColor)
     }
 }

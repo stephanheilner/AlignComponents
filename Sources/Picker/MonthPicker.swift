@@ -71,50 +71,12 @@ public struct MonthPicker: View {
             }
         }
         .sheet(isPresented: $isShowingPicker) {
-            monthPickerView()
+            MonthPickerView(title: titleKey, month: $month)
         }
         .onChange(of: month) { _, newValue in
             if newValue != _selection.wrappedValue {
                 selection = newValue
             }
         }
-    }
-
-    @ViewBuilder
-    func monthPickerView() -> some View {
-        ScrollView {
-            ZStack(alignment: .topLeading) {
-                HStack(alignment: .top) {
-                    cancelButton()
-                    Spacer()
-                }
-                HStack(alignment: .top) {
-                    Spacer()
-                    Text(titleKey)
-                        .font(.title2)
-                    Spacer()
-                }
-            }
-
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 10) {
-                ForEach(1 ... Calendar.current.monthSymbols.count, id: \.self) { month in
-                    Button(Calendar.current.monthSymbols[month - 1]) {
-                        self.month = month
-                        isShowingPicker = false
-                    }
-                    .buttonStyle(PickerButtonStyle())
-                }
-            }
-        }
-        .padding(20)
-        .background(Color(UIColor.systemBackground))
-    }
-
-    @ViewBuilder
-    func cancelButton() -> some View {
-        Button("Cancel") {
-            isShowingPicker = false
-        }
-        .buttonStyle(.plain)
     }
 }

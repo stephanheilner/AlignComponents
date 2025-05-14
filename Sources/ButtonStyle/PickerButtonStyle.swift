@@ -27,18 +27,20 @@ import SwiftUI
 public struct PickerButtonStyle: ButtonStyle {
     let tintColor: Color
     let foregroundColor: Color
+    let selected: Bool
 
-    public init(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary) {
+    public init(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary, selected: Bool = false) {
         self.tintColor = tintColor
         self.foregroundColor = foregroundColor
+        self.selected = selected
     }
 
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .frame(maxWidth: .infinity, minHeight: 44, maxHeight: .infinity)
             .padding(3)
-            .background(configuration.isPressed ? tintColor.opacity(0.6) : tintColor)
-            .foregroundColor(foregroundColor)
+            .background(configuration.isPressed ? (selected ? Color.accentColor : tintColor).opacity(0.6) : (selected ? Color.accentColor : tintColor))
+            .foregroundColor(selected ? Color.white : foregroundColor)
             .cornerRadius(6)
             .overlay(RoundedRectangle(cornerRadius: 6).stroke(foregroundColor.opacity(0.5), lineWidth: 0.5))
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
@@ -47,15 +49,21 @@ public struct PickerButtonStyle: ButtonStyle {
 }
 
 public extension ButtonStyle where Self == PickerButtonStyle {
-    static var picker: PickerButtonStyle { PickerButtonStyle() }
+    static var picker: PickerButtonStyle { picker() }
+    static func picker(tintColor: Color = Color(UIColor.tertiarySystemGroupedBackground), foregroundColor: Color = .primary, selected: Bool = false) -> PickerButtonStyle {
+        PickerButtonStyle(tintColor: tintColor, foregroundColor: foregroundColor, selected: selected)
+    }
 }
 
 #Preview {
     VStack {
         Button("Button 1") {}
-            .buttonStyle(PickerButtonStyle())
+            .buttonStyle(.picker())
 
         Button("Button 2") {}
             .buttonStyle(.picker)
+
+        Button("Button 2") {}
+            .buttonStyle(PickerButtonStyle())
     }
 }

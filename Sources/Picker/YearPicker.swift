@@ -72,50 +72,12 @@ public struct YearPicker: View {
             }
         }
         .sheet(isPresented: $isShowingPicker) {
-            yearPickerView()
+            YearPickerView(title: titleKey, year: $year)
         }
         .onChange(of: year) { _, newValue in
             if newValue != _selection.wrappedValue {
                 selection = newValue
             }
         }
-    }
-
-    @ViewBuilder
-    func yearPickerView() -> some View {
-        ScrollView {
-            ZStack(alignment: .topLeading) {
-                HStack(alignment: .top) {
-                    cancelButton()
-                    Spacer()
-                }
-                HStack(alignment: .top) {
-                    Spacer()
-                    Text(titleKey)
-                        .font(.title2)
-                    Spacer()
-                }
-            }
-
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
-                ForEach(range.reversed(), id: \.self) { year in
-                    Button(String(year)) {
-                        self.year = year
-                        isShowingPicker = false
-                    }
-                    .buttonStyle(PickerButtonStyle())
-                }
-            }
-        }
-        .padding(20)
-        .background(Color(UIColor.systemBackground))
-    }
-
-    @ViewBuilder
-    func cancelButton() -> some View {
-        Button("Cancel") {
-            isShowingPicker = false
-        }
-        .buttonStyle(.plain)
     }
 }

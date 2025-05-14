@@ -83,32 +83,34 @@ public struct HourPicker: View {
 
     @ViewBuilder
     func hourPickerView() -> some View {
-        ScrollView {
-            ZStack(alignment: .topLeading) {
-                HStack(alignment: .top) {
-                    cancelButton()
-                    Spacer()
-                }
-                HStack(alignment: .top) {
-                    Spacer()
-                    Text(titleKey)
-                        .font(.title2)
-                    Spacer()
-                }
-            }
-//            LazyVGrid(columns: [.init(.adaptive(minimum: 45, maximum: 50), alignment: .top)]) {
-
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
-                ForEach(hoursRange, id: \.self) { hour in
-                    Button(String(format: "%d", hour)) {
-                        hours = hour
-                        isShowingPicker = false
+        ScrollView(.vertical) {
+            VStack(alignment: .leading, spacing: 20) {
+                ZStack(alignment: .topLeading) {
+                    HStack(alignment: .top) {
+                        cancelButton()
+                        Spacer()
                     }
-                    .buttonStyle(PickerButtonStyle())
+                    HStack(alignment: .top) {
+                        Spacer()
+                        Text(titleKey)
+                            .font(.body)
+                            .fontWeight(.bold)
+                        Spacer()
+                    }
+                }
+
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
+                    ForEach(hoursRange, id: \.self) { hour in
+                        Button(String(format: "%d", hour)) {
+                            hours = hour
+                            isShowingPicker = false
+                        }
+                        .buttonStyle(.picker(selected: hours == hour))
+                    }
                 }
             }
+            .padding(20)
         }
-        .padding(20)
         .background(Color(UIColor.systemBackground))
     }
 

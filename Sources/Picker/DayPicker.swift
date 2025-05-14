@@ -72,50 +72,12 @@ public struct DayPicker: View {
             }
         }
         .sheet(isPresented: $isShowingPicker) {
-            dayPickerView()
+            DayPickerView(title: titleKey, month: month, day: $day)
         }
         .onChange(of: day) { _, newValue in
             if newValue != _selection.wrappedValue {
                 selection = newValue
             }
         }
-    }
-
-    @ViewBuilder
-    func dayPickerView() -> some View {
-        ScrollView {
-            ZStack(alignment: .topLeading) {
-                HStack(alignment: .top) {
-                    cancelButton()
-                    Spacer()
-                }
-                HStack(alignment: .top) {
-                    Spacer()
-                    Text(titleKey)
-                        .font(.title2)
-                    Spacer()
-                }
-            }
-
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
-                ForEach(1 ... Date().endOfMonth(month: month).day, id: \.self) { day in
-                    Button(String(day)) {
-                        self.day = day
-                        isShowingPicker = false
-                    }
-                    .buttonStyle(PickerButtonStyle())
-                }
-            }
-        }
-        .padding(20)
-        .background(Color(UIColor.systemBackground))
-    }
-
-    @ViewBuilder
-    func cancelButton() -> some View {
-        Button("Cancel") {
-            isShowingPicker = false
-        }
-        .buttonStyle(.plain)
     }
 }

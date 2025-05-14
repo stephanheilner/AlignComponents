@@ -53,31 +53,10 @@ struct ContentView: View {
 
     var body: some View {
         List {
-            Section("HUD") {
-                Button("HUD with Auto Dismiss") {
-                    hudMessage = HUDMessage(title: "HUD with Auto Dismiss (after 3 seconds)")
-                }
-                Button("HUD with OK") {
-                    hudMessage = HUDMessage(title: "HUD with OK", onConfirm: {
-                        hudMessage = nil
-                    })
-                }
-                Button("HUD with OK & Dismiss") {
-                    hudMessage = HUDMessage(
-                        title: "HUD with OK & Dismiss",
-                        onDismiss: {
-                            hudMessage = nil
-                        }, onConfirm: {
-                            hudMessage = HUDMessage(title: "Dismiss after 3 seconds")
-                        }
-                    )
-                }
-            }
-            Section("Normal") {
+            Section("Pickers") {
                 MonthPicker("Month", selection: $month)
                 DayPicker("Day", selection: $day, month: Date().month)
                 YearPicker("Year", selection: $year)
-
                 HourPicker("Hours", selection: $hours)
                 MinutesPicker("Minutes", selection: $minutes)
 
@@ -87,10 +66,15 @@ struct ContentView: View {
                     .buttonStyle(.plain)
                 MonthDayYearDatePicker("", selection: $date)
                     .buttonStyle(.plain)
-                FloatingLabelTextField("Title", text: $text)
-                FloatingLabelTextField("Password", text: $password, isSecure: true, error: $passwordError)
+                CompactDatePicker(selection: $date)
+                    .buttonStyle(.plain)
 
                 TimePicker("Time", selection: $selectedTime)
+            }
+
+            Section("Text") {
+                FloatingLabelTextField("Title", text: $text)
+                FloatingLabelTextField("Password", text: $password, isSecure: true, error: $passwordError)
             }
 
             Section("Error") {
@@ -116,6 +100,27 @@ struct ContentView: View {
                 Button("Capsule Filled") {}.buttonStyle(.capsuleFilled)
                 Button("Capsule Small") {}.buttonStyle(.capsuleSmall)
                 Button("Capsule Small Filled") {}.buttonStyle(.capsuleSmallFilled)
+            }
+
+            Section("HUD") {
+                Button("HUD with Auto Dismiss") {
+                    hudMessage = HUDMessage(title: "HUD with Auto Dismiss (after 3 seconds)")
+                }
+                Button("HUD with OK") {
+                    hudMessage = HUDMessage(title: "HUD with OK", onConfirm: {
+                        hudMessage = nil
+                    })
+                }
+                Button("HUD with OK & Dismiss") {
+                    hudMessage = HUDMessage(
+                        title: "HUD with OK & Dismiss",
+                        onDismiss: {
+                            hudMessage = nil
+                        }, onConfirm: {
+                            hudMessage = HUDMessage(title: "Dismiss after 3 seconds")
+                        }
+                    )
+                }
             }
         }
         .hud(hudMessage: $hudMessage)
