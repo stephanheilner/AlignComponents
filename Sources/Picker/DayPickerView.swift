@@ -39,8 +39,22 @@ public struct DayPickerView: View {
         self.calendar = calendar
         _selectedDay = selection
         self.month = month ?? Date().month
+
+        let validMonth = (month ?? Date().month)
+        let displayMonth = (1 ... 12).contains(validMonth) ? validMonth : 1
+        let monthString = calendar.monthSymbols[displayMonth - 1]
+
+        if let titleKey {
+            title = titleKey
+        } else {
+            var titleText = monthString
+            if let year {
+                titleText += " \(String(year))"
+            }
+            title = LocalizedStringKey(titleText)
+        }
+
         self.year = year ?? Date().year
-        title = titleKey ?? LocalizedStringKey(calendar.monthSymbols[(month ?? Date().month) - 1])
     }
 
     public var body: some View {

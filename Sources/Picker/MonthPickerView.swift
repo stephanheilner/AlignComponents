@@ -27,7 +27,6 @@ import SwiftUI
 public struct MonthPickerView: View {
     var title: LocalizedStringKey
     @Binding var month: Int
-    var showMonthNumber: Bool = false
     @Environment(\.dismiss) private var dismiss
 
     public var body: some View {
@@ -53,15 +52,9 @@ public struct MonthPickerView: View {
                             self.month = month
                             dismiss()
                         }, label: {
-                            if showMonthNumber {
-                                Text("\(Calendar.current.shortMonthSymbols[month - 1])\u{00A0}(\(month))")
-                                    .minimumScaleFactor(0.7)
-                                    .lineLimit(1)
-                            } else {
-                                Text(Calendar.current.monthSymbols[month - 1])
-                                    .minimumScaleFactor(0.7)
-                                    .lineLimit(1)
-                            }
+                            Text("\(Calendar.current.shortMonthSymbols[month - 1])\u{00A0}(\(month))")
+                                .minimumScaleFactor(0.7)
+                                .lineLimit(1)
                         })
                         .buttonStyle(.picker(selected: self.month == month))
                     }

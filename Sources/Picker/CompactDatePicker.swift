@@ -35,9 +35,7 @@ public struct CompactDatePicker: View {
     @State private var selectedDay: Int
     @State private var selectedYear: Int
 
-    @State private var isShowingMonthPicker: Bool = false
-    @State private var isShowingDayPicker: Bool = false
-    @State private var isShowingYearPicker: Bool = false
+    @State private var pickerType: PickerType?
 
     @Binding private var selection: Date?
     @Binding private var error: String?
@@ -82,7 +80,7 @@ public struct CompactDatePicker: View {
 
             HStack(alignment: .center, spacing: 0) {
                 Button {
-                    isShowingMonthPicker = true
+                    pickerType = .month
                 } label: {
                     if selectedMonth != -1 {
                         Text(String(selectedMonth))
@@ -90,9 +88,13 @@ public struct CompactDatePicker: View {
                         Text("Month")
                     }
                 }
+                .buttonStyle(.plain)
+                .foregroundColor(.accentColor)
+
                 Text("/").foregroundColor(.secondary)
+
                 Button {
-                    isShowingDayPicker = true
+                    pickerType = .day
                 } label: {
                     if selectedDay != -1 {
                         Text(String(selectedDay))
@@ -100,9 +102,13 @@ public struct CompactDatePicker: View {
                         Text("Day")
                     }
                 }
+                .buttonStyle(.plain)
+                .foregroundColor(.accentColor)
+
                 Text("/").foregroundColor(.secondary)
+
                 Button {
-                    isShowingYearPicker = true
+                    pickerType = .year
                 } label: {
                     if selectedYear != -1 {
                         Text(String(selectedYear))
@@ -110,6 +116,8 @@ public struct CompactDatePicker: View {
                         Text("Year")
                     }
                 }
+                .buttonStyle(.plain)
+                .foregroundColor(.accentColor)
             }
 
             if let error, !error.isEmpty {
@@ -133,14 +141,23 @@ public struct CompactDatePicker: View {
             let date = (_selection.wrappedValue ?? Date()).setting(month: selectedMonth, day: selectedDay, year: newValue)
             debounce?.call(date)
         }
-        .sheet(isPresented: $isShowingMonthPicker) {
-            MonthPickerView(title: "Month", month: $selectedMonth, showMonthNumber: true)
-        }
-        .sheet(isPresented: $isShowingDayPicker) {
-            DayPickerView(month: selectedMonth, year: selectedYear, selection: $selectedDay)
-        }
-        .sheet(isPresented: $isShowingYearPicker) {
-            YearPickerView(title: "Year", year: $selectedYear, range: yearRange)
+        .sheet(item: $pickerType) { pickerType in
+            switch pickerType {
+            case .month:
+                MonthPickerView(title: "Month", month: $selectedMonth)
+            case .day:
+                DayPickerView(month: selectedMonth, year: selectedYear, selection: $selectedDay)
+            case .year:
+                YearPickerView(title: "Year", year: $selectedYear, range: yearRange)
+            }
         }
     }
+}
+
+private enum PickerType: String, Identifiable {
+    case month
+    case day
+    case year
+
+    var id: String { rawValue }
 }
