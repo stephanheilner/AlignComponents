@@ -72,7 +72,7 @@ public struct YearPicker: View {
             }
         }
         .sheet(isPresented: $isShowingPicker) {
-            YearPickerView(title: titleKey, year: $year)
+            YearPickerView(title: titleKey, year: $year, range: range)
         }
         .onChange(of: year) { _, newValue in
             if newValue != _selection.wrappedValue {
