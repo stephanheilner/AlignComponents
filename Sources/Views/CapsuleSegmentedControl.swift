@@ -24,14 +24,14 @@
 
 import SwiftUI
 
-struct CapsuleSegmentedControl<Item: Identifiable & Equatable>: View {
-    let items: [Item]
-    @Binding var selection: Item
-    let accentColor: Color
-    let title: (Item) -> String
-    let titleFont: Font = .footnote
+public struct CapsuleSegmentedControl<Item: Identifiable & Equatable>: View {
+    public let items: [Item]
+    @Binding public var selection: Item
+    public var accentColor: Color = .accentColor
+    public let title: (Item) -> String
+    public var titleFont: Font = .footnote
 
-    var body: some View {
+    public var body: some View {
         HStack(spacing: 0) {
             ForEach(items) { item in
                 Button(action: {
@@ -58,7 +58,6 @@ struct CapsuleSegmentedControl<Item: Identifiable & Equatable>: View {
     CapsuleSegmentedControl(
         items: DayPeriod.allCases,
         selection: $dayPeriod,
-        accentColor: Color.accentColor,
         title: { $0.title }
     )
     .frame(width: 80)
