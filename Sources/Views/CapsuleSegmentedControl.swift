@@ -25,11 +25,19 @@
 import SwiftUI
 
 public struct CapsuleSegmentedControl<Item: Identifiable & Equatable>: View {
-    public let items: [Item]
-    @Binding public var selection: Item
-    public var accentColor: Color = .accentColor
-    public let title: (Item) -> String
-    public var titleFont: Font = .footnote
+    let items: [Item]
+    @Binding var selection: Item
+    let accentColor: Color
+    let title: (Item) -> String
+    let titleFont: Font
+
+    public init(items: [Item], selection: Binding<Item>, accentColor: Color = .accentColor, title: @escaping (Item) -> String, titleFont: Font = .footnote) {
+        self.items = items
+        _selection = selection
+        self.accentColor = accentColor
+        self.title = title
+        self.titleFont = titleFont
+    }
 
     public var body: some View {
         HStack(spacing: 0) {

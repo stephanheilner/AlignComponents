@@ -56,7 +56,7 @@ public struct TimePicker: View {
             _minutes = State(initialValue: Int((seconds.truncatingRemainder(dividingBy: 3600) / 60).rounded()))
         } else {
             _hour = State(initialValue: -1)
-            _minutes = State(initialValue: -1)
+            _minutes = State(initialValue: 0)
         }
 
         debounce = Debounce<TimeInterval>(0.3) { [self] seconds in
